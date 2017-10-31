@@ -1,9 +1,14 @@
+<style lang="scss" src="./global.scss"></style>
+
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld/>
+    <StreamExpressionInput
+      v-for="(v, i) in expressions"
+      v-model="expressions[i].value"
+      key="v.uuid"
+    />
   </div>
 </template>
 
 <script lang="ts" src="./App.ts"></script>
-<style src="./App.scss"></style>
+<style lang="scss" scoped src="./App.scss"></style>
