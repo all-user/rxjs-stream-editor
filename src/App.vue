@@ -1,17 +1,16 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <StreamEditor/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import StreamEditor from './components/StreamEditor/StreamEditor.vue';
 
 @Component({
   components: {
-    HelloWorld,
+    StreamEditor,
   },
 })
 export default class App extends Vue {}
@@ -24,4 +23,12 @@ export default class App extends Vue {}
   text-align center
   color #2c3e50
   margin-top 60px
+
+body
+  padding 20px 0
+  margin 0
+  width 100vw
+  height 100vh
+  display block
+  background-color ivory
 </style>
