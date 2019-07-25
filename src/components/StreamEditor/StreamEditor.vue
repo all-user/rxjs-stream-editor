@@ -5,7 +5,23 @@
         <div class="source-code">
           <pre>fromEvent(document, 'click') <span class="syntax-comment">// stream0$</span></pre>
         </div>
-        <div class="stream" ref="clickStream"></div>
+        <div class="stream" ref="clickStream">
+          <div
+            v-for="packet in clickPackets"
+            class="packet"
+            :key="packet.id"
+            @animationend="() => handleClickPakcetAnimationEnd(packet)"
+          >
+            <template v-if="isNumberPacket(packet)">{{packet.value}}</template>
+            <template v-else-if="isArrayPacket(packet)">
+              <template v-for="(ev, idx) in packet.value">
+                <div :key="idx" class="event"></div>
+                <div :key="`${idx}-comma`" v-if="idx !== packet.value.length" class="event-comma"></div>
+              </template>
+            </template>
+            <div v-else class="event"></div>
+          </div>
+        </div>
       </div>
       <div class="stream-wrapper buffer">
         <div class="source-code">
