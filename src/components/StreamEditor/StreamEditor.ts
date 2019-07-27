@@ -1,10 +1,9 @@
 import { Component, Vue } from 'vue-property-decorator';
-import * as rxjs from 'rxjs';
-import * as operators from 'rxjs/operators';
 import Packet from '../../domain/Packet';
 import streamItemModule from '../../store/modules/streamItem';
 import StreamItem from '../../domain/StreamItem';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
+import debounce from 'lodash-es/debounce';
 
 @Component({
   components: {
@@ -15,26 +14,16 @@ export default class StreamEditor extends Vue.extend({
   computed: {
     ...streamItemModule.mapGetters(['streamItems']),
   },
+  methods: {
+    ...streamItemModule.mapActions(['evaluateSourceCode']),
+  },
 }) {
   get streamItemCtx() {
     return streamItemModule.context(this.$store);
   }
 
-  get sourceCode() {
-    return `
-    var evaluated = [];
-    with (Object.assign({}, rxjs, operators)) {
-    ${this.streamItems
-      .map(
-        (streamItem, i) => `
-      var _${i}$ = ${streamItem.sourceCode};
-      _${i}$ = _${i}$.pipe(share());
-      evaluated.push(_${i}$);
-    `,
-      )
-      .join('\n')}
-    }
-    return evaluated;`;
+  get evaluateSourceCodeDebounced() {
+    return debounce(this.evaluateSourceCode, 500);
   }
 
   public isNumberPacket(packet: Packet) {
@@ -72,20 +61,6 @@ export default class StreamEditor extends Vue.extend({
   }
 
   public beforeMount() {
-    // tslint:disable-next-line: no-eval
-    const evaluated: Array<rxjs.Observable<any>> = new Function(
-      'rxjs',
-      'operators',
-      this.sourceCode,
-    )(rxjs, operators);
-
-    this.streamItems.forEach((streamItem, i) => {
-      evaluated[i].subscribe(ev =>
-        this.streamItemCtx.actions.pushPacket({
-          streamItemId: streamItem.id,
-          packet: new Packet({ value: ev }),
-        }),
-      );
-    });
+    this.evaluateSourceCode();
   }
 }
