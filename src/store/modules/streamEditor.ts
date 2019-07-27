@@ -1,23 +1,29 @@
 import { Module, Actions, Mutations, Getters } from 'vuex-smart-module';
 import Packet from '@/domain/Packet';
-import { omit } from 'lodash-es';
+import Queue from '@/domain/Queue';
 
 export class StreamEditorState {
-  public packetMap: Record<string, Packet> = {};
-  public clickPacketIdsRaw: string[] = [];
+  public packetQueueMap: Record<string, Queue<Packet>> = {};
+  public clickPacketQueueIds: string[] = [];
 }
 
 export class StreamEditorMutations extends Mutations<StreamEditorState> {
-  public deletePacket(id: string) {
-    this.state.packetMap = omit(this.state.packetMap, [id]);
+  public shiftPacket({ packetQueueId }: { packetQueueId: string }) {
+    this.state.packetQueueMap[packetQueueId].shift();
   }
 
-  public addPacket(packet: Packet) {
-    this.state.packetMap[packet.id] = packet;
+  public pushPacket({
+    packetQueueId,
+    packet,
+  }: {
+    packetQueueId: string;
+    packet: Packet;
+  }) {
+    this.state.packetQueueMap[packetQueueId].push(packet);
   }
 
-  public pushClickPacketId(packet: Packet) {
-    this.state.clickPacketIdsRaw.push(packet.id);
+  public addPacketQueue({ packetQueue }: { packetQueue: Queue<Packet> }) {
+    this.state.packetQueueMap[packetQueue.id] = packetQueue;
   }
 }
 
@@ -27,15 +33,14 @@ export class StreamEditorActions extends Actions<
   StreamEditorMutations,
   StreamEditorActions
 > {
-  public addClickPacket(packet: Packet) {
-    this.mutations.addPacket(packet);
-    this.mutations.pushClickPacketId(packet);
+  public pushPacket(payload: { packetQueueId: string; packet: Packet }) {
+    this.mutations.pushPacket(payload);
   }
 }
 
 export class StreamEditorGetters extends Getters<StreamEditorState> {
-  get clickPackets() {
-    return this.state.clickPacketIdsRaw.map((id) => this.state.packetMap[id]).filter((p) => p);
+  get packetQueue() {
+    return (packetQueueId: string) => this.state.packetQueueMap[packetQueueId];
   }
 }
 

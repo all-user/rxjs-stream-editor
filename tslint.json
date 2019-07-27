@@ -1,7 +1,8 @@
 {
   "defaultSeverity": "warning",
   "extends": [
-    "tslint:recommended"
+    "tslint:recommended",
+    "tslint-config-prettier"
   ],
   "linterOptions": {
     "exclude": [
@@ -9,12 +10,13 @@
     ]
   },
   "rules": {
-    "quotemark": [true, "single"],
-    "indent": [true, "spaces", 2],
     "interface-name": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "no-consecutive-blank-lines": false,
-    "max-classes-per-file": false
-  }
+    "max-classes-per-file": false,
+    "arrow-parens": false,
+    "prettier": true
+  },
+  "rulesDirectory": ["tslint-plugin-prettier"]
 }

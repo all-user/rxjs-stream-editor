@@ -1,16 +1,16 @@
 <template>
   <div class="container">
-    <div class="streams" ref="streams" @click="$emit('streamClicked')">
+    <div class="streams" ref="streams" @click="$emit('stream-click')">
       <div class="stream-wrapper click">
         <div class="source-code">
           <pre>fromEvent(document, 'click') <span class="syntax-comment">// stream0$</span></pre>
         </div>
         <div class="stream" ref="clickStream">
           <div
-            v-for="packet in clickPackets"
+            v-for="packet in clickPacketQueue.nativeArray"
             class="packet"
             :key="packet.id"
-            @animationend="() => handleClickPakcetAnimationEnd(packet)"
+            @animationend="() => handleClickPakcetAnimationEnd(clickPacketQueue)"
           >
             <template v-if="isNumberPacket(packet)">{{packet.value}}</template>
             <template v-else-if="isArrayPacket(packet)">
