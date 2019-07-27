@@ -2,17 +2,17 @@ import { Component, Vue } from 'vue-property-decorator';
 import * as rxjs from 'rxjs';
 import * as operators from 'rxjs/operators';
 import Packet from '../../domain/Packet';
-import streamEditor from '../../store/modules/streamEditor';
-import Queue from '@/domain/Queue';
+import packetModule from '../../store/modules/packet';
+import Queue from '../../domain/Queue';
 
 @Component
 export default class StreamEditor extends Vue.extend({
   computed: {
-    ...streamEditor.mapGetters(['packetQueue']),
+    ...packetModule.mapGetters(['packetQueue']),
   },
 }) {
-  get streamEditorCtx() {
-    return streamEditor.context(this.$store);
+  get packetCtx() {
+    return packetModule.context(this.$store);
   }
 
   get sourceCode() {
@@ -67,7 +67,7 @@ export default class StreamEditor extends Vue.extend({
   }
 
   public handlePakcetAnimationEnd(packetQueue: Queue<Packet>) {
-    this.streamEditorCtx.mutations.shiftPacket({
+    this.packetCtx.mutations.shiftPacket({
       packetQueueId: packetQueue.id,
     });
   }
@@ -84,9 +84,9 @@ export default class StreamEditor extends Vue.extend({
 
     this.streamItems.forEach(streamItem => {
       const { packetQueue, stream } = streamItem;
-      this.streamEditorCtx.mutations.addPacketQueue({ packetQueue });
+      this.packetCtx.mutations.addPacketQueue({ packetQueue });
       stream.subscribe(ev =>
-        this.streamEditorCtx.actions.pushPacket({
+        this.packetCtx.actions.pushPacket({
           packetQueueId: packetQueue.id,
           packet: new Packet(ev),
         }),

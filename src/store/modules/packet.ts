@@ -1,13 +1,12 @@
 import { Module, Actions, Mutations, Getters } from 'vuex-smart-module';
-import Packet from '@/domain/Packet';
-import Queue from '@/domain/Queue';
+import Packet from '../../domain/Packet';
+import Queue from '../../domain/Queue';
 
-export class StreamEditorState {
+export class PacketState {
   public packetQueueMap: Record<string, Queue<Packet>> = {};
-  public clickPacketQueueIds: string[] = [];
 }
 
-export class StreamEditorMutations extends Mutations<StreamEditorState> {
+export class PacketMutations extends Mutations<PacketState> {
   public shiftPacket({ packetQueueId }: { packetQueueId: string }) {
     this.state.packetQueueMap[packetQueueId].shift();
   }
@@ -27,18 +26,18 @@ export class StreamEditorMutations extends Mutations<StreamEditorState> {
   }
 }
 
-export class StreamEditorActions extends Actions<
-  StreamEditorState,
-  StreamEditorGetters,
-  StreamEditorMutations,
-  StreamEditorActions
+export class PacketActions extends Actions<
+  PacketState,
+  PacketGetters,
+  PacketMutations,
+  PacketActions
 > {
   public pushPacket(payload: { packetQueueId: string; packet: Packet }) {
     this.mutations.pushPacket(payload);
   }
 }
 
-export class StreamEditorGetters extends Getters<StreamEditorState> {
+export class PacketGetters extends Getters<PacketState> {
   get packetQueue() {
     return (packetQueueId: string) => this.state.packetQueueMap[packetQueueId];
   }
@@ -46,8 +45,8 @@ export class StreamEditorGetters extends Getters<StreamEditorState> {
 
 export default new Module({
   namespaced: true,
-  state: StreamEditorState,
-  mutations: StreamEditorMutations,
-  getters: StreamEditorGetters,
-  actions: StreamEditorActions,
+  state: PacketState,
+  mutations: PacketMutations,
+  getters: PacketGetters,
+  actions: PacketActions,
 });
