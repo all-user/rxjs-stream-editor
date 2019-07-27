@@ -10,8 +10,10 @@ export class StreamItemState {
 
 export class StreamItemMutations extends Mutations<StreamItemState> {
   public shiftPacket({ streamItemId }: { streamItemId: string }) {
-    this.state.streamItemMap[streamItemId].packets.shift();
-    this.state.streamItemMap = { ...this.state.streamItemMap };
+    this.state.streamItemMap[streamItemId].shiftPacket();
+    this.state.streamItemMap = {
+      ...this.state.streamItemMap,
+    };
   }
 
   public pushPacket({
@@ -21,8 +23,10 @@ export class StreamItemMutations extends Mutations<StreamItemState> {
     streamItemId: string;
     packet: Packet;
   }) {
-    this.state.streamItemMap[streamItemId].packets.push(packet);
-    this.state.streamItemMap = { ...this.state.streamItemMap };
+    this.state.streamItemMap[streamItemId].pushPacket(packet);
+    this.state.streamItemMap = {
+      ...this.state.streamItemMap,
+    };
   }
 
   public pushStreamItem({ streamItem }: { streamItem: StreamItem }) {
@@ -37,6 +41,19 @@ export class StreamItemMutations extends Mutations<StreamItemState> {
       return;
     }
     this.state.streamItemMap = omit(this.state.streamItemMap, [id]);
+  }
+
+  public setSourceCode({
+    streamItemId,
+    sourceCode,
+  }: {
+    streamItemId: string;
+    sourceCode: string;
+  }) {
+    this.state.streamItemMap[streamItemId].sourceCode = sourceCode;
+    this.state.streamItemMap = {
+      ...this.state.streamItemMap,
+    };
   }
 }
 

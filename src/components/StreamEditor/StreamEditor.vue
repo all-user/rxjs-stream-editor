@@ -4,10 +4,10 @@
       <div
         v-for="item in streamItems"
         class="stream-wrapper"
-        :key="item.sourceCode"
+        :key="item.id"
       >
         <div class="source-code">
-          <input class="source-code-input" type="text" :value="item.sourceCode">
+          <StreamEditorItem :item="item"/>
         </div>
         <div class="stream">
           <div

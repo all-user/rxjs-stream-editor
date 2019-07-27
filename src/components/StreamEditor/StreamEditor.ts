@@ -4,8 +4,13 @@ import * as operators from 'rxjs/operators';
 import Packet from '../../domain/Packet';
 import streamItemModule from '../../store/modules/streamItem';
 import StreamItem from '../../domain/StreamItem';
+import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
 
-@Component
+@Component({
+  components: {
+    StreamEditorItem,
+  },
+})
 export default class StreamEditor extends Vue.extend({
   computed: {
     ...streamItemModule.mapGetters(['streamItems']),
@@ -66,7 +71,7 @@ export default class StreamEditor extends Vue.extend({
     });
   }
 
-  public mounted() {
+  public beforeMount() {
     // tslint:disable-next-line: no-eval
     const evaluated: Array<rxjs.Observable<any>> = new Function(
       'rxjs',
