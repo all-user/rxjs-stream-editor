@@ -1,33 +1,52 @@
 <template>
-  <div class="container">
-    <div class="streams">
+  <div class="StreamEditor-root">
+    <div class="StreamEditor-streamItems">
       <div
         v-for="item in streamItems"
-        class="stream-wrapper"
+        class="StreamEditor-streamItem"
         :key="item.id"
       >
-        <div class="source-code">
+        <div class="StreamEditor-sourceCode">
           <StreamEditorItem :item="item"/>
         </div>
-        <div class="stream">
-          <div
+        <div class="StreamEditor-stream">
+          <template
             v-for="packet in item.packets"
-            :class="{ packet: true, array: isArrayPacket(packet), number: isNumberPacket(packet) }"
-            :key="packet.id"
-            @animationend="() => handlePakcetAnimationEnd(item)"
           >
-            <template v-if="isNumberPacket(packet)">{{packet.value}}</template>
-            <template v-else-if="isArrayPacket(packet)">
-              <template v-for="(ev, idx) in packet.value">
-                <div :key="idx" class="event"></div>
-              </template>
-            </template>
-            <div v-else class="event"></div>
-          </div>
+            <div
+              v-if="isNumberPacket(packet)"
+              class="StreamEditor-packet StreamEditor-packet--number"
+              :key="packet.id"
+              @animationend="() => handlePakcetAnimationEnd(item)"
+            >
+              {{packet.value}}
+            </div>
+
+            <div
+              v-else-if="isArrayPacket(packet)"
+              class="StreamEditor-packet StreamEditor-packet--array"
+              :key="packet.id"
+              @animationend="() => handlePakcetAnimationEnd(item)"
+            >
+              <div
+                v-for="(ev, idx) in packet.value"
+                :key="idx" class="StreamEditor-packetDetail"
+              />
+            </div>
+
+            <div
+              v-else
+              class="StreamEditor-packet"
+              :key="packet.id"
+              @animationend="() => handlePakcetAnimationEnd(item)"
+            >
+              <div class="StreamEditor-packetDetail"/>
+            </div>
+          </template>
         </div>
       </div>
     </div>
-    <div class="error-messages">
+    <div v-if="errorMessage.length" class="StreamEditor-errorMessage">
       {{ errorMessage }}
     </div>
   </div>

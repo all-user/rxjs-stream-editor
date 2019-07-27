@@ -16,19 +16,23 @@ import StreamEditor from './components/StreamEditor/StreamEditor.vue';
 export default class App extends Vue {}
 </script>
 <style lang="stylus">
-#app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
+*
+  position: relative
+  box-sizing: border-box
+  user-select: none
 
 body
-  padding 20px 0
-  margin 0
-  width 100vw
-  height 100vh
-  display block
-  background-color ivory
+  padding: 0
+  margin: 0
+  width: 100vw
+  height: 100vh
+  display: block
+  background-color: ivory
+
+#app
+  font-family: 'Avenir', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  width: 100%
+  height: 100%
 </style>
