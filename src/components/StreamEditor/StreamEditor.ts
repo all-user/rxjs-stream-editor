@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Observable, of } from 'rxjs';
-import { share, buffer, debounceTime, map, filter } from 'rxjs/operators';
+import * as _rxjs from 'rxjs';
+import * as _operators from 'rxjs/operators';
 import Packet from '../../domain/Packet';
 import streamEditor from '../../store/modules/streamEditor';
 import Queue from '@/domain/Queue';
@@ -17,31 +17,28 @@ export default class StreamEditor extends Vue.extend({
   public streamItems: Array<{
     sourceCode: string;
     packetQueue: Queue<Packet>;
-    stream: Observable<any>;
+    stream: _rxjs.Observable<any>;
   }> = [
     {
       sourceCode:
-        'fromEvent(document, "click") <span class="syntax-comment">// stream0$</span>',
+        "rxjs.fromEvent(document.body, 'click').pipe(operators.share())",
       packetQueue: new Queue<Packet>(),
-      stream: of(undefined),
+      stream: _rxjs.of(undefined),
     },
     {
-      sourceCode:
-        '<span class="syntax-stream">stream0$</span>.pipe(<span class="syntax-operator">buffer</span>(<span class="syntax-stream">stream0$</span>.pipe(<span class="syntax-operator">debounceTime</span>(250)))) <span class="syntax-comment">// stream1$</span>',
+      sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))))',
       packetQueue: new Queue<Packet>(),
-      stream: of(undefined),
+      stream: _rxjs.of(undefined),
     },
     {
-      sourceCode:
-        '<span class="syntax-stream">stream1$</span>.pipe(<span class="syntax-operator">map</span>(list => list.length)) <span class="syntax-comment">// stream2$</span>',
+      sourceCode: '_1$.pipe(map(list => list.length))',
       packetQueue: new Queue<Packet>(),
-      stream: of(undefined),
+      stream: _rxjs.of(undefined),
     },
     {
-      sourceCode:
-        '<span class="syntax-stream">stream2$</span>.pipe(<span class="syntax-operator">filter</span>(x => x === 2)) <span class="syntax-comment">// stream3$</span>',
+      sourceCode: '_2$.pipe(filter(x => x === 2))',
       packetQueue: new Queue<Packet>(),
-      stream: of(undefined),
+      stream: _rxjs.of(undefined),
     },
   ];
 
@@ -59,46 +56,36 @@ export default class StreamEditor extends Vue.extend({
     });
   }
 
-  private mounted() {
-    const vm = this;
-    const $0 = (this.streamItems[0].stream = new Observable<Event>(
-      subscriber => {
-        vm.$on('stream-click', (e: Event) => subscriber.next(e));
-      },
-    ).pipe(share()));
-    const $1 = (this.streamItems[1].stream = $0.pipe(
-      buffer($0.pipe(debounceTime(250))),
-      share(),
-    ));
-    const $2 = (this.streamItems[2].stream = $1.pipe(
-      map(list => list.length),
-      share(),
-    ));
-    this.streamItems[3].stream = $2.pipe(
-      filter(x => x === 2),
-      share(),
-    );
+  public mounted() {
+    // @ts-ignore
+    const rxjs = _rxjs;
+    // @ts-ignore
+    const operators = _operators;
 
-    const bufferStreamLine = this.$refs.bufferStream as HTMLElement;
-    const mapStreamLine = this.$refs.mapStream as HTMLElement;
-    const doubleClickStreamLine = this.$refs.doubleClickStream as HTMLElement;
+    // tslint:disable-next-line: no-eval
+    const evaluated: Array<_rxjs.Observable<any>> = eval(`(() => {
+      var evaluated = [];
+      var _0$ = rxjs.fromEvent(document.body, 'click').pipe(operators.share());
+      evaluated.push(_0$);
+      var _1$ = _0$.pipe(
+        operators.buffer(_0$.pipe(operators.debounceTime(250))),
+        operators.share(),
+      );
+      evaluated.push(_1$);
+      var _2$ = _1$.pipe(
+        operators.map(list => list.length),
+        operators.share(),
+      );
+      evaluated.push(_2$);
+      var _3$ = _2$.pipe(
+        operators.filter(x => x === 2),
+        operators.share(),
+      );
+      evaluated.push(_3$);
+      return [_0$, _1$, _2$, _3$];
+    })()`);
 
-    const packetBaseNode = document.createElement('div');
-    packetBaseNode.classList.toggle('packet', true);
-    const eventBaseNode = document.createElement('div');
-    eventBaseNode.classList.toggle('event', true);
-    const eventCommaBaseNode = document.createElement('div');
-    eventCommaBaseNode.classList.toggle('event-comma', true);
-    eventCommaBaseNode.textContent = ',';
-
-    const generateEventNodeFn = <T>(line: HTMLElement, cb: (arg: T) => any) => (
-      e: T,
-    ) => {
-      const packet = packetBaseNode.cloneNode(true);
-      packet.appendChild(cb(e));
-      packet.addEventListener('animationend', () => line.removeChild(packet));
-      line.appendChild(packet);
-    };
+    evaluated.forEach((stream, i) => (this.streamItems[i].stream = stream));
 
     this.streamItems.forEach(streamItem => {
       const { packetQueue, stream } = streamItem;

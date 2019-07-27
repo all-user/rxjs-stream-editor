@@ -7,7 +7,7 @@
         :key="sourceCode"
       >
         <div class="source-code">
-          <pre v-html="sourceCode"></pre>
+          <input class="source-code-input" type="text" :value="sourceCode">
         </div>
         <div class="stream" ref="clickStream">
           <div
@@ -20,7 +20,6 @@
             <template v-else-if="isArrayPacket(packet)">
               <template v-for="(ev, idx) in packet.value">
                 <div :key="idx" class="event"></div>
-                <div :key="`${idx}-comma`" v-if="idx !== packet.value.length - 1" class="event-comma"></div>
               </template>
             </template>
             <div v-else class="event"></div>
