@@ -2,17 +2,17 @@ import { Component, Vue } from 'vue-property-decorator';
 import * as rxjs from 'rxjs';
 import * as operators from 'rxjs/operators';
 import Packet from '../../domain/Packet';
-import packetModule from '../../store/modules/packet';
-import Queue from '../../domain/Queue';
+import streamItemModule from '../../store/modules/streamItem';
+import StreamItem from '../../domain/StreamItem';
 
 @Component
 export default class StreamEditor extends Vue.extend({
   computed: {
-    ...packetModule.mapGetters(['packetQueue']),
+    ...streamItemModule.mapGetters(['streamItems']),
   },
 }) {
-  get packetCtx() {
-    return packetModule.context(this.$store);
+  get streamItemCtx() {
+    return streamItemModule.context(this.$store);
   }
 
   get sourceCode() {
@@ -23,6 +23,7 @@ export default class StreamEditor extends Vue.extend({
       .map(
         (streamItem, i) => `
       var _${i}$ = ${streamItem.sourceCode};
+      _${i}$ = _${i}$.pipe(share());
       evaluated.push(_${i}$);
     `,
       )
@@ -30,33 +31,6 @@ export default class StreamEditor extends Vue.extend({
     }
     return evaluated;`;
   }
-
-  public streamItems: Array<{
-    sourceCode: string;
-    packetQueue: Queue<Packet>;
-    stream: rxjs.Observable<any>;
-  }> = [
-    {
-      sourceCode: "fromEvent(document.body, 'click').pipe(share())",
-      packetQueue: new Queue<Packet>(),
-      stream: rxjs.of(undefined),
-    },
-    {
-      sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))), share())',
-      packetQueue: new Queue<Packet>(),
-      stream: rxjs.of(undefined),
-    },
-    {
-      sourceCode: '_1$.pipe(map(list => list.length), share())',
-      packetQueue: new Queue<Packet>(),
-      stream: rxjs.of(undefined),
-    },
-    {
-      sourceCode: '_2$.pipe(filter(x => x === 2), share())',
-      packetQueue: new Queue<Packet>(),
-      stream: rxjs.of(undefined),
-    },
-  ];
 
   public isNumberPacket(packet: Packet) {
     return typeof packet.value === 'number';
@@ -66,9 +40,29 @@ export default class StreamEditor extends Vue.extend({
     return Array.isArray(packet.value);
   }
 
-  public handlePakcetAnimationEnd(packetQueue: Queue<Packet>) {
-    this.packetCtx.mutations.shiftPacket({
-      packetQueueId: packetQueue.id,
+  public handlePakcetAnimationEnd(streamItem: StreamItem) {
+    this.streamItemCtx.mutations.shiftPacket({
+      streamItemId: streamItem.id,
+    });
+  }
+
+  public created() {
+    const streamItems: StreamItem[] = [
+      new StreamItem({
+        sourceCode: "fromEvent(document.body, 'click')",
+      }),
+      new StreamItem({
+        sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))))',
+      }),
+      new StreamItem({
+        sourceCode: '_1$.pipe(map(list => list.length))',
+      }),
+      new StreamItem({
+        sourceCode: '_2$.pipe(filter(x => x === 2))',
+      }),
+    ];
+    streamItems.forEach(streamItem => {
+      this.streamItemCtx.mutations.pushStreamItem({ streamItem });
     });
   }
 
@@ -80,15 +74,11 @@ export default class StreamEditor extends Vue.extend({
       this.sourceCode,
     )(rxjs, operators);
 
-    evaluated.forEach((stream, i) => (this.streamItems[i].stream = stream));
-
-    this.streamItems.forEach(streamItem => {
-      const { packetQueue, stream } = streamItem;
-      this.packetCtx.mutations.addPacketQueue({ packetQueue });
-      stream.subscribe(ev =>
-        this.packetCtx.actions.pushPacket({
-          packetQueueId: packetQueue.id,
-          packet: new Packet(ev),
+    this.streamItems.forEach((streamItem, i) => {
+      evaluated[i].subscribe(ev =>
+        this.streamItemCtx.actions.pushPacket({
+          streamItemId: streamItem.id,
+          packet: new Packet({ value: ev }),
         }),
       );
     });

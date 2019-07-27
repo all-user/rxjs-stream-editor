@@ -1,20 +1,20 @@
 <template>
   <div class="container">
-    <div class="streams" ref="streams" @click="$emit('stream-click')">
+    <div class="streams">
       <div
-        v-for="{ sourceCode, packetQueue } in streamItems"
+        v-for="item in streamItems"
         class="stream-wrapper"
-        :key="sourceCode"
+        :key="item.sourceCode"
       >
         <div class="source-code">
-          <input class="source-code-input" type="text" :value="sourceCode">
+          <input class="source-code-input" type="text" :value="item.sourceCode">
         </div>
-        <div class="stream" ref="clickStream">
+        <div class="stream">
           <div
-            v-for="packet in packetQueue.nativeArray"
+            v-for="packet in item.packets"
             :class="{ packet: true, array: isArrayPacket(packet), number: isNumberPacket(packet) }"
             :key="packet.id"
-            @animationend="() => handlePakcetAnimationEnd(packetQueue)"
+            @animationend="() => handlePakcetAnimationEnd(item)"
           >
             <template v-if="isNumberPacket(packet)">{{packet.value}}</template>
             <template v-else-if="isArrayPacket(packet)">

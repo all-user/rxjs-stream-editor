@@ -1,8 +1,8 @@
 import { Module } from 'vuex-smart-module';
-import packet from './packet';
+import streamItem from './streamItem';
 
 export default new Module({
   modules: {
-    packet,
+    streamItem,
   },
 });

@@ -1,7 +1,13 @@
 import { v4 } from 'uuid';
 
 export default class Packet {
-  public readonly id: string = v4();
+  public id: string = v4();
+  public value: any;
 
-  constructor(readonly value: any) {}
+  constructor({ id, value }: Partial<Packet>) {
+    if (id != null) {
+      this.id = id;
+    }
+    this.value = value;
+  }
 }
