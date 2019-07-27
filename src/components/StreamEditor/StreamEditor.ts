@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
-import * as _rxjs from 'rxjs';
-import * as _operators from 'rxjs/operators';
+import * as rxjs from 'rxjs';
+import * as operators from 'rxjs/operators';
 import Packet from '../../domain/Packet';
 import streamEditor from '../../store/modules/streamEditor';
 import Queue from '@/domain/Queue';
@@ -14,31 +14,47 @@ export default class StreamEditor extends Vue.extend({
   get streamEditorCtx() {
     return streamEditor.context(this.$store);
   }
+
+  get sourceCode() {
+    return `
+    var evaluated = [];
+    with (Object.assign({}, rxjs, operators)) {
+    ${this.streamItems
+      .map(
+        (streamItem, i) => `
+      var _${i}$ = ${streamItem.sourceCode};
+      evaluated.push(_${i}$);
+    `,
+      )
+      .join('\n')}
+    }
+    return evaluated;`;
+  }
+
   public streamItems: Array<{
     sourceCode: string;
     packetQueue: Queue<Packet>;
-    stream: _rxjs.Observable<any>;
+    stream: rxjs.Observable<any>;
   }> = [
     {
-      sourceCode:
-        "rxjs.fromEvent(document.body, 'click').pipe(operators.share())",
+      sourceCode: "fromEvent(document.body, 'click').pipe(share())",
       packetQueue: new Queue<Packet>(),
-      stream: _rxjs.of(undefined),
+      stream: rxjs.of(undefined),
     },
     {
-      sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))))',
+      sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))), share())',
       packetQueue: new Queue<Packet>(),
-      stream: _rxjs.of(undefined),
+      stream: rxjs.of(undefined),
     },
     {
-      sourceCode: '_1$.pipe(map(list => list.length))',
+      sourceCode: '_1$.pipe(map(list => list.length), share())',
       packetQueue: new Queue<Packet>(),
-      stream: _rxjs.of(undefined),
+      stream: rxjs.of(undefined),
     },
     {
-      sourceCode: '_2$.pipe(filter(x => x === 2))',
+      sourceCode: '_2$.pipe(filter(x => x === 2), share())',
       packetQueue: new Queue<Packet>(),
-      stream: _rxjs.of(undefined),
+      stream: rxjs.of(undefined),
     },
   ];
 
@@ -57,33 +73,12 @@ export default class StreamEditor extends Vue.extend({
   }
 
   public mounted() {
-    // @ts-ignore
-    const rxjs = _rxjs;
-    // @ts-ignore
-    const operators = _operators;
-
     // tslint:disable-next-line: no-eval
-    const evaluated: Array<_rxjs.Observable<any>> = eval(`(() => {
-      var evaluated = [];
-      var _0$ = rxjs.fromEvent(document.body, 'click').pipe(operators.share());
-      evaluated.push(_0$);
-      var _1$ = _0$.pipe(
-        operators.buffer(_0$.pipe(operators.debounceTime(250))),
-        operators.share(),
-      );
-      evaluated.push(_1$);
-      var _2$ = _1$.pipe(
-        operators.map(list => list.length),
-        operators.share(),
-      );
-      evaluated.push(_2$);
-      var _3$ = _2$.pipe(
-        operators.filter(x => x === 2),
-        operators.share(),
-      );
-      evaluated.push(_3$);
-      return [_0$, _1$, _2$, _3$];
-    })()`);
+    const evaluated: Array<rxjs.Observable<any>> = new Function(
+      'rxjs',
+      'operators',
+      this.sourceCode,
+    )(rxjs, operators);
 
     evaluated.forEach((stream, i) => (this.streamItems[i].stream = stream));
 

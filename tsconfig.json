@@ -13,6 +13,8 @@
     "baseUrl": ".",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noImplicitUseStrict": true,
+    "alwaysStrict": false,
     "types": [
       "webpack-env",
       "jest"
