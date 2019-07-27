@@ -19,7 +19,6 @@ export default class App extends Vue {}
 *
   position: relative
   box-sizing: border-box
-  user-select: none
 
 body
   padding: 0
