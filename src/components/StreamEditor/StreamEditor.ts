@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { share, buffer, debounceTime, map, filter } from 'rxjs/operators';
 import Packet from '../../domain/Packet';
 import streamEditor from '../../store/modules/streamEditor';
@@ -11,7 +11,39 @@ export default class StreamEditor extends Vue.extend({
     ...streamEditor.mapGetters(['packetQueue']),
   },
 }) {
-  public clickPacketQueue = new Queue<Packet>();
+  get streamEditorCtx() {
+    return streamEditor.context(this.$store);
+  }
+  public streamItems: Array<{
+    sourceCode: string;
+    packetQueue: Queue<Packet>;
+    stream: Observable<any>;
+  }> = [
+    {
+      sourceCode:
+        'fromEvent(document, "click") <span class="syntax-comment">// stream0$</span>',
+      packetQueue: new Queue<Packet>(),
+      stream: of(undefined),
+    },
+    {
+      sourceCode:
+        '<span class="syntax-stream">stream0$</span>.pipe(<span class="syntax-operator">buffer</span>(<span class="syntax-stream">stream0$</span>.pipe(<span class="syntax-operator">debounceTime</span>(250)))) <span class="syntax-comment">// stream1$</span>',
+      packetQueue: new Queue<Packet>(),
+      stream: of(undefined),
+    },
+    {
+      sourceCode:
+        '<span class="syntax-stream">stream1$</span>.pipe(<span class="syntax-operator">map</span>(list => list.length)) <span class="syntax-comment">// stream2$</span>',
+      packetQueue: new Queue<Packet>(),
+      stream: of(undefined),
+    },
+    {
+      sourceCode:
+        '<span class="syntax-stream">stream2$</span>.pipe(<span class="syntax-operator">filter</span>(x => x === 2)) <span class="syntax-comment">// stream3$</span>',
+      packetQueue: new Queue<Packet>(),
+      stream: of(undefined),
+    },
+  ];
 
   public isNumberPacket(packet: Packet) {
     return typeof packet.value === 'number';
@@ -21,30 +53,28 @@ export default class StreamEditor extends Vue.extend({
     return Array.isArray(packet.value);
   }
 
-  public handleClickPakcetAnimationEnd(packetQueue: Queue<Packet>) {
+  public handlePakcetAnimationEnd(packetQueue: Queue<Packet>) {
     this.streamEditorCtx.mutations.shiftPacket({
       packetQueueId: packetQueue.id,
     });
   }
 
-  get streamEditorCtx() {
-    return streamEditor.context(this.$store);
-  }
-
   private mounted() {
     const vm = this;
-    const clickStream = new Observable<Event>(subscriber => {
-      vm.$on('stream-click', (e: Event) => subscriber.next(e));
-    }).pipe(share());
-    const bufferStream = clickStream.pipe(
-      buffer(clickStream.pipe(debounceTime(250))),
+    const $0 = (this.streamItems[0].stream = new Observable<Event>(
+      subscriber => {
+        vm.$on('stream-click', (e: Event) => subscriber.next(e));
+      },
+    ).pipe(share()));
+    const $1 = (this.streamItems[1].stream = $0.pipe(
+      buffer($0.pipe(debounceTime(250))),
       share(),
-    );
-    const mapStream = bufferStream.pipe(
+    ));
+    const $2 = (this.streamItems[2].stream = $1.pipe(
       map(list => list.length),
       share(),
-    );
-    const doubleClickStream = mapStream.pipe(
+    ));
+    this.streamItems[3].stream = $2.pipe(
       filter(x => x === 2),
       share(),
     );
@@ -70,41 +100,15 @@ export default class StreamEditor extends Vue.extend({
       line.appendChild(packet);
     };
 
-    this.streamEditorCtx.mutations.addPacketQueue({
-      packetQueue: this.clickPacketQueue,
+    this.streamItems.forEach(streamItem => {
+      const { packetQueue, stream } = streamItem;
+      this.streamEditorCtx.mutations.addPacketQueue({ packetQueue });
+      stream.subscribe(ev =>
+        this.streamEditorCtx.actions.pushPacket({
+          packetQueueId: packetQueue.id,
+          packet: new Packet(ev),
+        }),
+      );
     });
-    clickStream.subscribe(ev =>
-      this.streamEditorCtx.actions.pushPacket({
-        packetQueueId: this.clickPacketQueue!.id,
-        packet: new Packet(ev),
-      }),
-    );
-    bufferStream.subscribe(
-      generateEventNodeFn(bufferStreamLine, (e: Event[]) => {
-        const fragment = document.createDocumentFragment();
-        for (let i = 0; i < e.length; i++) {
-          fragment.appendChild(eventBaseNode.cloneNode(true));
-          if (i !== e.length - 1) {
-            fragment.appendChild(eventCommaBaseNode.cloneNode(true));
-          }
-        }
-        return fragment;
-      }),
-    );
-    mapStream.subscribe(
-      generateEventNodeFn(mapStreamLine, (e: number) => {
-        const span = document.createElement('span');
-        span.textContent = '' + e;
-        if (e === 2) {
-          span.classList.toggle('true', true);
-        }
-        return span;
-      }),
-    );
-    doubleClickStream.subscribe(
-      generateEventNodeFn(doubleClickStreamLine, () =>
-        eventBaseNode.cloneNode(true),
-      ),
-    );
   }
 }

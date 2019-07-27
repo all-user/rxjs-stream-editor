@@ -88,12 +88,47 @@
           flex-flow column nowrap
           align-items center
           justify-content center
+          &.array
+            width 20px
+            height 120%
+            justify-content space-between
+            background-color ivory
+            padding 4px
+            &::before,
+            &::after
+              display flex
+              flex-flow row nowrap
+              align-items center
+              justify-content center
+              font-size 12px
+              width 2px
+              height 2px
+              font-family 'Fira Code', Menlo, monospace
+            &::before
+              content '['
+              transform rotate(90deg)
+            &::after
+              content ']'
+              transform rotate(90deg)
+          &.number
+            display flex
+            flex-flow row nowrap
+            align-items center
+            justify-content center
+            background-color ivory
+            width 20px
+            height 20px
+            padding 2px
+            font-family 'Fira Code', Menlo, monospace
+            font-size 16px
+            color black
           .event
             display block
             width 5px
             height 5px
             border-radius 50%
             background-color black
+            box-shadow 0 0 5px 0 rgba(black,.5)
           .event-comma
             display flex
             flex-flow row nowrap
@@ -103,54 +138,3 @@
             align-items center
             justify-content center
             transform rotate(90deg)
-      &.click
-        /deep/ .packet
-          .event
-            background-color black
-            box-shadow 0 0 5px 0 rgba(black,.5)
-      &.buffer
-        /deep/ .packet
-          width 20px
-          height 120%
-          justify-content space-between
-          background-color ivory
-          padding 4px
-          &::before,
-          &::after
-            display flex
-            flex-flow row nowrap
-            align-items center
-            justify-content center
-            font-size 12px
-            width 2px
-            height 2px
-            font-family 'Fira Code', Menlo, monospace
-          &::before
-            content '['
-            transform rotate(90deg)
-          &::after
-            content ']'
-            transform rotate(90deg)
-          .event
-            background-color black
-            box-shadow 0 0 5px 0 rgba(black,.5)
-      &.map
-        /deep/ .packet
-          display flex
-          flex-flow row nowrap
-          align-items center
-          justify-content center
-          background-color ivory
-          width 20px
-          height 20px
-          padding 2px
-          font-family 'Fira Code', Menlo, monospace
-          font-size 16px
-          color black
-          .true
-            color orangered
-      &.double-click
-        /deep/ .packet
-          .event
-            background-color orangered
-            box-shadow 0 0 5px 0 rgba(orangered,.5)
