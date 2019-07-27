@@ -27,6 +27,9 @@
         </div>
       </div>
     </div>
+    <div class="error-messages">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
 <script lang="ts" src="./StreamEditor.ts"></script>

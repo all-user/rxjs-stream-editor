@@ -1,4 +1,4 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import Packet from '../../domain/Packet';
 import streamItemModule from '../../store/modules/streamItem';
 import StreamItem from '../../domain/StreamItem';
@@ -12,12 +12,18 @@ import debounce from 'lodash-es/debounce';
 })
 export default class StreamEditor extends Vue.extend({
   computed: {
-    ...streamItemModule.mapGetters(['streamItems']),
+    ...streamItemModule.mapGetters(['streamItems', 'sourceCode']),
+    ...streamItemModule.mapState(['errorMessage']),
   },
   methods: {
     ...streamItemModule.mapActions(['evaluateSourceCode']),
   },
 }) {
+  @Watch('sourceCode')
+  public watchSourceCode() {
+    this.evaluateSourceCodeDebounced();
+  }
+
   get streamItemCtx() {
     return streamItemModule.context(this.$store);
   }

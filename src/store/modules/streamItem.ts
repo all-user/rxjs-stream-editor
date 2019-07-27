@@ -10,6 +10,7 @@ export class StreamItemState {
   public streamItemIds: string[] = [];
   public streams: Array<rxjs.Observable<any>> = [];
   public subscriptions: rxjs.Subscription[] = [];
+  public errorMessage: string = '';
 }
 
 export class StreamItemMutations extends Mutations<StreamItemState> {
@@ -74,6 +75,10 @@ export class StreamItemMutations extends Mutations<StreamItemState> {
   }) {
     this.state.subscriptions = subscriptions;
   }
+
+  public setErrorMessage({ message }: { message: string }) {
+    this.state.errorMessage = message;
+  }
 }
 
 export class StreamItemActions extends Actions<
@@ -93,21 +98,34 @@ export class StreamItemActions extends Actions<
   public evaluateSourceCode() {
     this.actions.unsubscribeAll();
 
-    const streams = new Function('rxjs', 'operators', this.getters.sourceCode)(
-      rxjs,
-      operators,
-    );
-    this.mutations.setStreams({ streams });
+    const errorHandler = (err: any) =>
+      this.mutations.setErrorMessage({
+        message: err.toString(),
+      });
 
-    const subscriptions = this.getters.streamItems.map((streamItem, i) => {
-      return this.state.streams[i].subscribe(ev =>
-        this.actions.pushPacket({
-          streamItemId: streamItem.id,
-          packet: new Packet({ value: ev }),
-        }),
-      );
-    });
-    this.mutations.setSubscriptions({ subscriptions });
+    try {
+      const streams = new Function(
+        'rxjs',
+        'operators',
+        'errorHandler',
+        this.getters.sourceCode,
+      )(rxjs, operators, errorHandler);
+      this.mutations.setErrorMessage({ message: '' });
+      this.mutations.setStreams({ streams });
+      const subscriptions = this.getters.streamItems.map((streamItem, i) => {
+        return this.state.streams[i].subscribe({
+          next: ev =>
+            this.actions.pushPacket({
+              streamItemId: streamItem.id,
+              packet: new Packet({ value: ev }),
+            }),
+          error: errorHandler,
+        });
+      });
+      this.mutations.setSubscriptions({ subscriptions });
+    } catch (err) {
+      errorHandler(err);
+    }
   }
 }
 
@@ -122,19 +140,23 @@ export class StreamItemGetters extends Getters<StreamItemState> {
   }
   get sourceCode() {
     return `
-    var evaluated = [];
-    with (Object.assign({}, rxjs, operators)) {
-    ${this.getters.streamItems
-      .map(
-        (streamItem, i) => `
-      var _${i}$ = ${streamItem.sourceCode};
-      _${i}$ = _${i}$.pipe(share());
-      evaluated.push(_${i}$);
-    `,
-      )
-      .join('\n')}
-    }
-    return evaluated;`;
+    try {
+      var evaluated = [];
+      with (Object.assign({}, rxjs, operators)) {
+      ${this.getters.streamItems
+        .map(
+          (streamItem, i) => `
+        var _${i}$ = ${streamItem.sourceCode};
+        _${i}$ = _${i}$.pipe(share());
+        evaluated.push(_${i}$);
+      `,
+        )
+        .join('\n')}
+      }
+      return evaluated;
+    } catch(err) {
+      errorHandler(err);
+    }`;
   }
 }
 
