@@ -5,11 +5,16 @@
   justify-content: flex-star
   background-color: ivory
   padding: 5px 20px
+  @media (max-width: 640px)
+    padding: 10px 5px
 
 .AppHeader-title
   flex: 1 0 auto
   color: black
   margin: 0
+  font-size: 32px
+  @media (max-width: 640px)
+    font-size: 17px
 
 .AppHeader-nav
   flex: 0 0 auto
@@ -20,3 +25,6 @@
   font-weight: bold
   text-decoration: none
   margin: 0 0 0 20px
+  @media (max-width: 640px)
+    font-size: 10px
+    margin: 0 0 0 8px

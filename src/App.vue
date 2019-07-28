@@ -44,7 +44,7 @@ body
   flex: 0 0 auto
   position: sticky
   top: 0
-  z-index: 1
+  z-index: 2
   margin: 0
   border-bottom: 1px solid black
   width: 100%
