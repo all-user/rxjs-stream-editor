@@ -39,6 +39,10 @@ export default class StreamEditor extends Vue.extend({
     });
   }
 
+  public handleRemoveStream() {
+    this.streamItemCtx.mutations.popStreamItem();
+  }
+
   public created() {
     const streamItems: StreamItem[] = [
       new StreamItem({

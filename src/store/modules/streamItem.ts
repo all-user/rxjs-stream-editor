@@ -28,7 +28,11 @@ export class StreamItemMutations extends Mutations<StreamItemState> {
     streamItemId: string;
     packet: Packet;
   }) {
-    this.state.streamItemMap[streamItemId].pushPacket(packet);
+    const item = this.state.streamItemMap[streamItemId];
+    if (item == null) {
+      return;
+    }
+    item.pushPacket(packet);
     this.state.streamItemMap = {
       ...this.state.streamItemMap,
     };

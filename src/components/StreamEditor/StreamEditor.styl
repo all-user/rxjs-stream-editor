@@ -17,37 +17,53 @@
   background-color: rgba(0,0,0,.05)
   overflow: hidden
 
-.StreamEditor-streamItem
-  flex: 0 0 auto
-  width: 100%
-
-.StreamEditor-addStreamItem
+.StreamEditor-streamItemWrapper
   display: flex
   flex-flow: column nowrap
   align-items: center
   justify-content: center
   width: 100%
   height: auto
-  &::before
-    content: '+'
-    display: flex
-    flex-flow: row nowrap
-    align-items: center
-    justify-content: center
-    position: absolute
-    width: 72px
-    height: 72px
-    font-size: 24px
-    font-weight: bold
-    color: black
-    background-color: ivory
-    border-radius: 50%
-    z-index: 1
-    border: solid 1px rgba(0,0,0,.64)
-    // box-shadow: 0px 2px 12px 0px rgba(0,0,0,.27)
 
-.StreamEditor-addStreamItem:hover .StreamEditor-streamItem--addStreamItem
+.StreamEditor-addStreamItemButton
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+  justify-content: center
+  position: absolute
+  width: 72px
+  height: 72px
+  font-size: 24px
+  font-weight: bold
+  color: black
+  background-color: ivory
+  border-radius: 50%
+  z-index: 1
+  border: solid 1px rgba(0,0,0,.64)
+
+.StreamEditor-removeStreamItemButton
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+  justify-content: center
+  width: 32px
+  height: 32px
+  color: crimson
+  font-size: 17px
+  font-weight: bold
+  position: absolute
+  top: 0
+  right: 0
+  background-color: ivory
+  border: solid 1px rgba(0,0,0,.64)
+  z-index: 1
+
+.StreamEditor-streamItemWrapper--addStreamItem:hover .StreamEditor-streamItem--addStreamItem
   opacity: 1
+
+.StreamEditor-streamItem
+  flex: 0 0 auto
+  width: 100%
 
 .StreamEditor-streamItem--addStreamItem
   width: 100%
@@ -55,6 +71,8 @@
   transition: opacity 200ms ease-in
 
 .StreamEditor-errorMessage
+  position: sticky
+  bottom: 0
   flex: 0 0 auto
   color: crimson
   font-size: 14px
@@ -64,3 +82,4 @@
   width: 100%
   padding: 10px
   white-space: pre
+  z-index: 2

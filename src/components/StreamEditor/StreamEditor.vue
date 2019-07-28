@@ -1,20 +1,34 @@
 <template>
   <div class="StreamEditor-root">
     <div class="StreamEditor-streamItems">
-      <StreamEditorItem
+      <div
         v-for="(item, index) in streamItems"
-        class="StreamEditor-streamItem"
+        class="StreamEditor-streamItemWrapper"
         :key="item.id"
-        :item="item"
-        :index="index"
-      />
-      <div @click="handleAddStream" class="StreamEditor-addStreamItem">
+      >
+        <StreamEditorItem
+          class="StreamEditor-streamItem"
+          :item="item"
+          :index="index"
+        />
+        <div
+          v-if="index === streamItems.length - 1"
+          class="StreamEditor-removeStreamItemButton"
+          @click="handleRemoveStream"
+        >
+          ×
+        </div>
+      </div>
+      <div
+        @click="handleAddStream"
+        class="StreamEditor-streamItemWrapper StreamEditor-streamItemWrapper--addStreamItem"
+      >
         <StreamEditorItem
           class="StreamEditor-streamItem--addStreamItem"
-          key="StreamEditor-streamItem--addStreamItem"
           :index="streamItems.length"
           :disabled="true"
         />
+        <div class="StreamEditor-addStreamItemButton">+</div>
       </div>
     </div>
     <div v-if="errorMessage.length" class="StreamEditor-errorMessage">
