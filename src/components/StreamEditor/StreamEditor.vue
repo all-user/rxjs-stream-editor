@@ -20,15 +20,19 @@
         </div>
       </div>
       <div
-        @click="handleAddStream"
         class="StreamEditor-streamItemWrapper StreamEditor-streamItemWrapper--addStreamItem"
       >
+        <div
+          @click="handleAddStream"
+          class="StreamEditor-addStreamItemButton"
+        >
+          +
+        </div>
         <StreamEditorItem
           class="StreamEditor-streamItem--addStreamItem"
           :index="streamItems.length"
           :disabled="true"
         />
-        <div class="StreamEditor-addStreamItemButton">+</div>
       </div>
     </div>
     <div v-if="errorMessage.length" class="StreamEditor-errorMessage">

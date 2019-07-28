@@ -38,6 +38,7 @@
   border-radius: 50%
   z-index: 1
   border: solid 1px rgba(0,0,0,.64)
+  cursor: pointer
 
 .StreamEditor-removeStreamItemButton
   display: flex
@@ -55,8 +56,9 @@
   background-color: ivory
   border: solid 1px rgba(0,0,0,.64)
   z-index: 1
+  cursor: pointer
 
-.StreamEditor-streamItemWrapper--addStreamItem:hover .StreamEditor-streamItem--addStreamItem
+.StreamEditor-addStreamItemButton:hover + .StreamEditor-streamItem--addStreamItem
   opacity: 1
 
 .StreamEditor-streamItem
