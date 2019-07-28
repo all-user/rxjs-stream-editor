@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <StreamEditor/>
+    <AppHeader class="AppHeader"/>
+    <StreamEditor class="StreamEditor"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import AppHeader from './components/AppHeader/AppHeader.vue';
 import StreamEditor from './components/StreamEditor/StreamEditor.vue';
 
 @Component({
   components: {
+    AppHeader,
     StreamEditor,
   },
 })
@@ -34,4 +37,19 @@ body
   -moz-osx-font-smoothing: grayscale
   width: 100%
   height: 100%
+  display: flex
+  flex-flow: column nowrap
+
+.AppHeader
+  flex: 0 0 auto
+  position: sticky
+  top: 0
+  z-index: 1
+  margin: 0
+  border-bottom: 1px solid black
+  width: 100%
+
+.StreamEditor
+  flex: 1 1 auto
+  width: 100%
 </style>
