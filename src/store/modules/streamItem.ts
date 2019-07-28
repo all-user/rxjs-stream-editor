@@ -146,7 +146,7 @@ export class StreamItemGetters extends Getters<StreamItemState> {
     return `
     try {
       var evaluated = [];
-      with (Object.assign({}, rxjs, operators)) {
+      with (Object.assign({}, operators, rxjs)) {
       ${this.getters.streamItems
         .map(
           (streamItem, i) => `
