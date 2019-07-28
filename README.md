@@ -1,5 +1,9 @@
 # rxjs-stream-editor
 
+![rxjs-stream-editor](https://all-user.github.io/rxjs-stream-editor/ogp.png)
+
+https://all-user.github.io/rxjs-stream-editor/
+
 ## Project setup
 ```
 yarn install
