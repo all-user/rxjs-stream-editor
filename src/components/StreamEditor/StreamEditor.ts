@@ -1,5 +1,4 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import Packet from '../../domain/Packet';
 import streamItemModule from '../../store/modules/streamItem';
 import StreamItem from '../../domain/StreamItem';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
@@ -32,17 +31,11 @@ export default class StreamEditor extends Vue.extend({
     return debounce(this.evaluateSourceCode, 500);
   }
 
-  public isNumberPacket(packet: Packet) {
-    return typeof packet.value === 'number';
-  }
-
-  public isArrayPacket(packet: Packet) {
-    return Array.isArray(packet.value);
-  }
-
-  public handlePakcetAnimationEnd(streamItem: StreamItem) {
-    this.streamItemCtx.mutations.shiftPacket({
-      streamItemId: streamItem.id,
+  public handleAddStream() {
+    this.streamItemCtx.mutations.pushStreamItem({
+      streamItem: new StreamItem({
+        sourceCode: `_${this.streamItems.length - 1}$`,
+      }),
     });
   }
 

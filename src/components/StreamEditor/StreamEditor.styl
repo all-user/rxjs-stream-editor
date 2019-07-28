@@ -1,9 +1,3 @@
-@keyframes packet-motion
-  0%
-    transform: translateX(0vw)
-  100%
-    transform: translateX(100vw)
-
 .StreamEditor-root
   display: flex
   flex-flow: column nowrap
@@ -25,99 +19,40 @@
 
 .StreamEditor-streamItem
   flex: 0 0 auto
-  display: flex
-  flex-flow: column nowrap
-  padding: 4px 0
   width: 100%
 
-.StreamEditor-sourceCode
-  flex: 0 0 auto
-  display: flex
-  flex-flow: row nowrap
-  align-items: center
-  padding: 2px
-  width: 100%
-  height: auto
-  background-color: rgba(0,0,0,.05)
-  border-top: solid 1px rgba(0,0,0,.1)
-  border-bottom: solid 1px rgba(0,0,0,.1)
-
-.StreamEditor-stream
-  width: 100%
-  height: 40px
-  margin: 2px 0
-  display: flex
-  flex-flow: row nowrap
-  align-items: stretch
-  &::before
-    content: ''
-    display: block
-    position: absolute
-    width: 100%
-    height: 1px
-    background-color: rgba(0,0,0,.5)
-    top: 0
-    bottom: 0
-    margin: auto
-
-.StreamEditor-packet
-  position: absolute
-  top: -100%
-  bottom: -100%
-  margin: auto
-  left: 0
-  flex: 0 0 auto
-  animation: packet-motion 30s linear
-  z-index: 1
-  height: 100%
+.StreamEditor-addStreamItem
   display: flex
   flex-flow: column nowrap
   align-items: center
   justify-content: center
-
-.StreamEditor-packet--array
-  width: 20px
-  height: 100%
-  justify-content: space-between
-  background-color: ivory
-  padding: 4px
-  &::before,
-  &::after
+  width: 100%
+  height: auto
+  &::before
+    content: '+'
     display: flex
     flex-flow: row nowrap
     align-items: center
     justify-content: center
-    font-size: 12px
-    width: 2px
-    height: 2px
-    font-family: 'Fira Code', Menlo, monospace
-  &::before
-    content: '['
-    transform: rotate(90deg)
-  &::after
-    content: ']'
-    transform: rotate(90deg)
+    position: absolute
+    width: 72px
+    height: 72px
+    font-size: 24px
+    font-weight: bold
+    color: black
+    background-color: ivory
+    border-radius: 50%
+    z-index: 1
+    border: solid 1px rgba(0,0,0,.64)
+    // box-shadow: 0px 2px 12px 0px rgba(0,0,0,.27)
 
-.StreamEditor-packet--number
-  display: flex
-  flex-flow: row nowrap
-  align-items: center
-  justify-content: center
-  background-color: ivory
-  width: 20px
-  height: 20px
-  padding: 2px
-  font-family: 'Fira Code', Menlo, monospace
-  font-size: 16px
-  color: black
+.StreamEditor-addStreamItem:hover .StreamEditor-streamItem--addStreamItem
+  opacity: 1
 
-.StreamEditor-packetDetail
-  display: block
-  width: 5px
-  height: 5px
-  border-radius: 50%
-  background-color: black
-  box-shadow: 0 0 5px 0 rgba(black,.5)
+.StreamEditor-streamItem--addStreamItem
+  width: 100%
+  opacity: .4
+  transition: opacity 200ms ease-in
 
 .StreamEditor-errorMessage
   flex: 0 0 auto
@@ -128,3 +63,4 @@
   background-color: white
   width: 100%
   padding: 10px
+  white-space: pre

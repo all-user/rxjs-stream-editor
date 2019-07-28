@@ -100,7 +100,7 @@ export class StreamItemActions extends Actions<
 
     const errorHandler = (err: any) =>
       this.mutations.setErrorMessage({
-        message: err.toString(),
+        message: err.stack,
       });
 
     try {

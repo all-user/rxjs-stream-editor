@@ -6,7 +6,7 @@ export default class StreamItem {
   public sourceCode: string;
   public packets: Packet[];
 
-  constructor({ id, sourceCode, packets }: Partial<StreamItem>) {
+  constructor({ id, sourceCode, packets }: Partial<StreamItem> = {}) {
     if (id != null) {
       this.id = id;
     }
