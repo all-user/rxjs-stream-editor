@@ -1,7 +1,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import StreamItem from '../../domain/StreamItem';
 import Packet from '../../domain/Packet';
-import streamItemModule from '../../store/modules/streamItem';
+import { streamItemModule } from '../../store/modules';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
 
 @Component({

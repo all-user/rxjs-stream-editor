@@ -1,6 +1,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import StreamItem from '../../domain/StreamItem';
-import streamItemModule from '../../store/modules/streamItem';
+import { streamItemModule } from '../../store/modules';
 
 @Component
 export default class StreamEditorTextarea extends Vue {

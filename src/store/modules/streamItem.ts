@@ -164,7 +164,7 @@ export class StreamItemGetters extends Getters<StreamItemState> {
   }
 }
 
-export default new Module({
+export const streamItemModule = new Module({
   namespaced: true,
   state: StreamItemState,
   mutations: StreamItemMutations,

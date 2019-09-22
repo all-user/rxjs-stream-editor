@@ -1,5 +1,5 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import streamItemModule from '../../store/modules/streamItem';
+import { streamItemModule } from '../../store/modules';
 import StreamItem from '../../domain/StreamItem';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
 import debounce from 'lodash-es/debounce';
