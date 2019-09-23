@@ -2,17 +2,17 @@
   <div class="StreamEditor-root">
     <div class="StreamEditor-streamItems">
       <div
-        v-for="(item, index) in streamItems"
+        v-for="(dataset, index) in streamDatasets"
         class="StreamEditor-streamItemWrapper"
-        :key="item.id"
+        :key="dataset.id"
       >
         <StreamEditorItem
           class="StreamEditor-streamItem"
-          :item="item"
+          :dataset="dataset"
           :index="index"
         />
         <div
-          v-if="index === streamItems.length - 1"
+          v-if="index === streamDatasets.length - 1"
           class="StreamEditor-removeStreamItemButton"
           @click="handleRemoveStream"
         >
@@ -30,7 +30,7 @@
         </div>
         <StreamEditorItem
           class="StreamEditor-streamItem--addStreamItem"
-          :index="streamItems.length"
+          :index="streamDatasets.length"
           :disabled="true"
         />
       </div>

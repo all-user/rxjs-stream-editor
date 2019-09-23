@@ -1,6 +1,6 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import { streamItemModule } from '../../store/modules';
-import StreamItem from '../../domain/StreamItem';
+import { streamEditorModule } from '../../store/modules/domain/internal';
+import { StreamDataset } from '../../domain/internal';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
 import debounce from 'lodash-es/debounce';
 
@@ -11,11 +11,15 @@ import debounce from 'lodash-es/debounce';
 })
 export default class StreamEditor extends Vue.extend({
   computed: {
-    ...streamItemModule.mapGetters(['streamItems', 'sourceCode']),
-    ...streamItemModule.mapState(['errorMessage']),
+    ...streamEditorModule.mapGetters(['streamDatasets', 'sourceCode']),
+    ...streamEditorModule.mapState(['errorMessage']),
   },
   methods: {
-    ...streamItemModule.mapActions(['evaluateSourceCode']),
+    ...streamEditorModule.mapActions(['evaluateSourceCode']),
+    ...streamEditorModule.mapMutations([
+      'pushStreamDataset',
+      'popStreamDataset',
+    ]),
   },
 }) {
   @Watch('sourceCode')
@@ -23,43 +27,39 @@ export default class StreamEditor extends Vue.extend({
     this.evaluateSourceCodeDebounced();
   }
 
-  get streamItemCtx() {
-    return streamItemModule.context(this.$store);
-  }
-
   get evaluateSourceCodeDebounced() {
     return debounce(this.evaluateSourceCode, 500);
   }
 
   public handleAddStream() {
-    this.streamItemCtx.mutations.pushStreamItem({
-      streamItem: new StreamItem({
-        sourceCode: `_${this.streamItems.length - 1}$`,
+    this.pushStreamDataset({
+      streamDataset: new StreamDataset({
+        sourceCode: `_${this.streamDatasets.length - 1}$`,
       }),
     });
   }
 
   public handleRemoveStream() {
-    this.streamItemCtx.mutations.popStreamItem();
+    this.popStreamDataset();
   }
 
   public created() {
-    const streamItems: StreamItem[] = [
-      new StreamItem({
+    const streamDatasets: StreamDataset[] = [
+      new StreamDataset({
         sourceCode: "fromEvent(document.body, 'click')",
       }),
-      new StreamItem({
+      new StreamDataset({
         sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))))',
       }),
-      new StreamItem({
+      new StreamDataset({
         sourceCode: '_1$.pipe(map(list => list.length))',
       }),
-      new StreamItem({
+      new StreamDataset({
         sourceCode: '_2$.pipe(filter(x => x === 2))',
       }),
     ];
-    streamItems.forEach(streamItem => {
-      this.streamItemCtx.mutations.pushStreamItem({ streamItem });
+    streamDatasets.forEach(streamDataset => {
+      this.pushStreamDataset({ streamDataset });
     });
   }
 

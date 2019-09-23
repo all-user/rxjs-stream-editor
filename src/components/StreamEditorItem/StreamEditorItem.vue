@@ -4,40 +4,40 @@
   >
     <div class="StreamEditorItem-sourceCode">
       <div class="StreamEditorItem-sourceCodeRefLabel">_{{index}}$</div>
-      <streamEditorTextarea :item="item" :disabled="disabled"/>
+      <streamEditorTextarea :dataset="dataset" :disabled="disabled"/>
     </div>
     <div class="StreamEditorItem-stream">
       <template
-        v-for="packet in packets"
+        v-for="event in events"
       >
         <div
-          v-if="isNumberPacket(packet)"
-          class="StreamEditorItem-packet StreamEditorItem-packet--number"
-          :key="packet.id"
-          @animationend="() => handlePakcetAnimationEnd(item)"
+          v-if="isNumberEvent(event)"
+          class="StreamEditorItem-event StreamEditorItem-event--number"
+          :key="event.id"
+          @animationend="() => handleEventAnimationEnd(dataset)"
         >
-          {{packet.value}}
+          {{event.value}}
         </div>
 
         <div
-          v-else-if="isArrayPacket(packet)"
-          class="StreamEditorItem-packet StreamEditorItem-packet--array"
-          :key="packet.id"
-          @animationend="() => handlePakcetAnimationEnd(item)"
+          v-else-if="isArrayEvent(event)"
+          class="StreamEditorItem-event StreamEditorItem-event--array"
+          :key="event.id"
+          @animationend="() => handleEventAnimationEnd(dataset)"
         >
           <div
-            v-for="(detail, packetDetailIndex) in packet.value"
-            :key="packetDetailIndex" class="StreamEditorItem-packetDetail"
+            v-for="(detail, eventDetailIndex) in event.value"
+            :key="eventDetailIndex" class="StreamEditorItem-eventDetail"
           />
         </div>
 
         <div
           v-else
-          class="StreamEditorItem-packet"
-          :key="packet.id"
-          @animationend="() => handlePakcetAnimationEnd(item)"
+          class="StreamEditorItem-event"
+          :key="event.id"
+          @animationend="() => handleEventAnimationEnd(dataset)"
         >
-          <div class="StreamEditorItem-packetDetail"/>
+          <div class="StreamEditorItem-eventDetail"/>
         </div>
       </template>
     </div>

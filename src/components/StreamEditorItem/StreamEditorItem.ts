@@ -1,7 +1,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import StreamItem from '../../domain/StreamItem';
-import Packet from '../../domain/Packet';
-import { streamItemModule } from '../../store/modules';
+import { StreamEvent, StreamDataset } from '../../domain/internal';
+import { streamEditorModule } from '../../store/modules/domain/internal';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
 
 @Component({
@@ -9,30 +8,30 @@ import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.v
     StreamEditorTextarea,
   },
 })
-export default class StreamEditorItem extends Vue {
-  @Prop() public item: StreamItem | undefined;
+export default class StreamEditorItem extends Vue.extend({
+  methods: {
+    ...streamEditorModule.mapMutations(['shiftEvent']),
+  },
+}) {
+  @Prop() public dataset: StreamDataset | undefined;
   @Prop({ required: true }) public index!: boolean;
   @Prop({ default: false }) public disabled!: boolean;
 
-  get streamItemCtx() {
-    return streamItemModule.context(this.$store);
+  get events() {
+    return this.dataset ? this.dataset.events : [];
   }
 
-  get packets() {
-    return this.item ? this.item.packets : [];
+  public isNumberEvent(event: StreamEvent) {
+    return typeof event.value === 'number';
   }
 
-  public isNumberPacket(packet: Packet) {
-    return typeof packet.value === 'number';
+  public isArrayEvent(event: StreamEvent) {
+    return Array.isArray(event.value);
   }
 
-  public isArrayPacket(packet: Packet) {
-    return Array.isArray(packet.value);
-  }
-
-  public handlePakcetAnimationEnd(streamItem: StreamItem) {
-    this.streamItemCtx.mutations.shiftPacket({
-      streamItemId: streamItem.id,
+  public handleEventAnimationEnd(streamDataset: StreamDataset) {
+    this.shiftEvent({
+      streamDatasetId: streamDataset.id,
     });
   }
 }

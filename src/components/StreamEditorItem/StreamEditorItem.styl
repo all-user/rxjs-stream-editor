@@ -1,4 +1,4 @@
-@keyframes packet-motion
+@keyframes event-motion
   0%
     transform: translateX(0vw)
   100%
@@ -50,14 +50,14 @@
     bottom: 0
     margin: auto
 
-.StreamEditorItem-packet
+.StreamEditorItem-event
   position: absolute
   top: -100%
   bottom: -100%
   margin: auto
   right: 0
   flex: 0 0 auto
-  animation: packet-motion 30s linear
+  animation: event-motion 30s linear
   z-index: 1
   height: 100%
   display: flex
@@ -65,7 +65,7 @@
   align-items: center
   justify-content: center
 
-.StreamEditorItem-packet--array
+.StreamEditorItem-event--array
   width: 20px
   height: 100%
   justify-content: space-between
@@ -88,7 +88,7 @@
     content: ']'
     transform: rotate(90deg)
 
-.StreamEditorItem-packet--number
+.StreamEditorItem-event--number
   display: flex
   flex-flow: row nowrap
   align-items: center
@@ -101,7 +101,7 @@
   font-size: 16px
   color: black
 
-.StreamEditorItem-packetDetail
+.StreamEditorItem-eventDetail
   display: block
   width: 5px
   height: 5px

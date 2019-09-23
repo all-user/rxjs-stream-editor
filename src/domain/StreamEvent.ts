@@ -1,10 +1,10 @@
 import { v4 } from 'uuid';
 
-export default class Packet {
+export class StreamEvent {
   public id: string = v4();
   public value: any;
 
-  constructor({ id, value }: Partial<Packet> = {}) {
+  constructor({ id, value }: Partial<StreamEvent> = {}) {
     if (id != null) {
       this.id = id;
     }
