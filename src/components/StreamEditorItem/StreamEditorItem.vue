@@ -1,20 +1,28 @@
 <template>
   <div
-    :class="{ 'StreamEditorItem-root': true, 'is-disabled': disabled }"
+    :class="{ 'StreamEditorItem-root': true, 'is-disabled': disabled, [`StreamEditorItem-root--nth${index % 4 + 1}`]: true }"
   >
     <div class="StreamEditorItem-sourceCode">
       <div class="StreamEditorItem-sourceCodeRefLabel">_{{index}}$</div>
       <streamEditorTextarea :dataset="dataset" :disabled="disabled"/>
     </div>
     <div class="StreamEditorItem-stream">
-      <template
+      <div
         v-for="event in events"
+        class="StreamEditorItem-eventWrapper"
+        :key="event.id"
+        @animationend="() => handleEventAnimationEnd(dataset)"
       >
         <div
           v-if="isNumberEvent(event)"
           class="StreamEditorItem-event StreamEditorItem-event--number"
-          :key="event.id"
-          @animationend="() => handleEventAnimationEnd(dataset)"
+        >
+          {{event.value}}
+        </div>
+
+        <div
+          v-else-if="isStringEvent(event)"
+          class="StreamEditorItem-event StreamEditorItem-event--string"
         >
           {{event.value}}
         </div>
@@ -22,8 +30,6 @@
         <div
           v-else-if="isArrayEvent(event)"
           class="StreamEditorItem-event StreamEditorItem-event--array"
-          :key="event.id"
-          @animationend="() => handleEventAnimationEnd(dataset)"
         >
           <div
             v-for="(detail, eventDetailIndex) in event.value"
@@ -33,13 +39,10 @@
 
         <div
           v-else
-          class="StreamEditorItem-event"
-          :key="event.id"
-          @animationend="() => handleEventAnimationEnd(dataset)"
+          class="StreamEditorItem-event StreamEditorItem-event--other"
         >
-          <div class="StreamEditorItem-eventDetail"/>
         </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>

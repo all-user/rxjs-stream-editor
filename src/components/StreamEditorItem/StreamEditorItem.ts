@@ -22,7 +22,11 @@ export default class StreamEditorItem extends Vue.extend({
   }
 
   public isNumberEvent(event: StreamEvent) {
-    return typeof event.value === 'number';
+    return event.value.__proto__ === Number.prototype;
+  }
+
+  public isStringEvent(event: StreamEvent) {
+    return event.value.__proto__ === String.prototype;
   }
 
   public isArrayEvent(event: StreamEvent) {
