@@ -14,6 +14,7 @@ export class StreamEditorState {
   public streams: Array<rxjs.Observable<any>> = [];
   public subscriptions: rxjs.Subscription[] = [];
   public errorMessage: string = '';
+  public message: string = '';
 }
 
 export class StreamEditorMutations extends Mutations<StreamEditorState> {
@@ -89,6 +90,10 @@ export class StreamEditorMutations extends Mutations<StreamEditorState> {
   public setErrorMessage({ message }: { message: string }) {
     this.state.errorMessage = message;
   }
+
+  public setMessage({ message }: { message: string }) {
+    this.state.message = message;
+  }
 }
 
 export class StreamEditorActions extends Actions<
@@ -121,6 +126,7 @@ export class StreamEditorActions extends Actions<
         this.getters.sourceCode,
       )(rxjs, operators, errorHandler);
       this.commit('setErrorMessage', { message: '' });
+      this.commit('setMessage', { message: '' });
       this.commit('setStreams', { streams });
       const subscriptions = this.getters.streamDatasets.map(
         (streamDataset, i) => {

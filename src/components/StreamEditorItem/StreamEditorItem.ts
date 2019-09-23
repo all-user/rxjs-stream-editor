@@ -3,6 +3,19 @@ import { StreamEvent, StreamDataset } from '../../domain/internal';
 import { streamEditorModule } from '../../store/modules/domain/internal';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
 
+const createNoCircularJsonStringifyReplacer = () => {
+  const seen: any[] = [];
+  return (_: string, value: any) => {
+    if (value != null && typeof value === 'object') {
+      if (seen.indexOf(value) >= 0) {
+        return;
+      }
+      seen.push(value);
+    }
+    return value;
+  };
+};
+
 @Component({
   components: {
     StreamEditorTextarea,
@@ -10,7 +23,7 @@ import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.v
 })
 export default class StreamEditorItem extends Vue.extend({
   methods: {
-    ...streamEditorModule.mapMutations(['shiftEvent']),
+    ...streamEditorModule.mapMutations(['shiftEvent', 'setMessage']),
   },
 }) {
   @Prop() public dataset: StreamDataset | undefined;
@@ -22,20 +35,37 @@ export default class StreamEditorItem extends Vue.extend({
   }
 
   public isNumberEvent(event: StreamEvent) {
-    return event.value.__proto__ === Number.prototype;
+    return event.value != null && event.value.__proto__ === Number.prototype;
   }
 
   public isStringEvent(event: StreamEvent) {
-    return event.value.__proto__ === String.prototype;
+    return event.value != null && event.value.__proto__ === String.prototype;
   }
 
   public isArrayEvent(event: StreamEvent) {
     return Array.isArray(event.value);
   }
 
+  public isNull(event: StreamEvent) {
+    return event.value === null;
+  }
+
+  public isUndefined(event: StreamEvent) {
+    return event.value === undefined;
+  }
+
   public handleEventAnimationEnd(streamDataset: StreamDataset) {
     this.shiftEvent({
       streamDatasetId: streamDataset.id,
     });
+  }
+
+  public handleEventClick(event: StreamEvent) {
+    const jsonString = JSON.stringify(
+      event.value,
+      createNoCircularJsonStringifyReplacer(),
+      2,
+    );
+    this.setMessage({ message: jsonString });
   }
 }

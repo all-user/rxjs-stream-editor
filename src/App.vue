@@ -36,6 +36,7 @@ body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   width: 100%
+  min-height: 100vh
   display: flex
   flex-flow: column nowrap
 

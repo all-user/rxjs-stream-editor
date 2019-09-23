@@ -63,6 +63,10 @@
   align-items: center
   justify-content: center
   animation: event-motion 30s linear
+  &:hover
+    z-index: 2
+    .StreamEditorItem-event
+      box-shadow: 0 0 5px 0 rgba(black,.5)
 
 .StreamEditorItem-event
   height: 100%
@@ -104,7 +108,7 @@
   align-items: center
   justify-content: center
   background-color: ivory
-  width: 20px
+  width: auto
   height: 20px
   padding: 2px
   font-family: 'Fira Code', Menlo, monospace
@@ -129,6 +133,21 @@
     content: '"'
   &::after
     content: '"'
+
+.StreamEditorItem-event--nullOrUndefined
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+  justify-content: center
+  background-color: gray
+  width: 20px
+  height: 20px
+  padding: 2px
+  font-family: 'Fira Code', Menlo, monospace
+  font-size: 16px
+  color: black
+  border-radius: 10px
+  opacity: .4
 
 .StreamEditorItem-event--other
   display: flex

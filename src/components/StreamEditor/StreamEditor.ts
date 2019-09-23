@@ -12,7 +12,7 @@ import debounce from 'lodash-es/debounce';
 export default class StreamEditor extends Vue.extend({
   computed: {
     ...streamEditorModule.mapGetters(['streamDatasets', 'sourceCode']),
-    ...streamEditorModule.mapState(['errorMessage']),
+    ...streamEditorModule.mapState(['errorMessage', 'message']),
   },
   methods: {
     ...streamEditorModule.mapActions(['evaluateSourceCode']),
