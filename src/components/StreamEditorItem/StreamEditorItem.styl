@@ -66,7 +66,8 @@
   &:hover
     z-index: 2
     .StreamEditorItem-event
-      box-shadow: 0 0 5px 0 rgba(black,.5)
+      background-color: black
+      color: ivory
 
 .StreamEditorItem-event
   height: 100%
@@ -115,6 +116,22 @@
   font-size: 16px
   color: black
   border-radius: 6px
+
+.StreamEditorItem-event--boolean
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+  justify-content: center
+  background-color: ivory
+  width: auto
+  height: 20px
+  padding: 2px
+  font-family: 'Fira Code', Menlo, monospace
+  font-size: 16px
+  color: black
+  border-radius: 6px
+  &.is-false
+    background-color: gainsboro
 
 .StreamEditorItem-event--string
   display: flex

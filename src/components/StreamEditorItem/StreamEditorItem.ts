@@ -42,6 +42,10 @@ export default class StreamEditorItem extends Vue.extend({
     return event.value != null && event.value.__proto__ === String.prototype;
   }
 
+  public isBooleanEvent(event: StreamEvent) {
+    return event.value != null && event.value.__proto__ === Boolean.prototype;
+  }
+
   public isArrayEvent(event: StreamEvent) {
     return Array.isArray(event.value);
   }

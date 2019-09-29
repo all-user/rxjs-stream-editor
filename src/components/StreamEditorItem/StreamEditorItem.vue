@@ -29,6 +29,14 @@
         </div>
 
         <div
+          v-else-if="isBooleanEvent(event)"
+          class="StreamEditorItem-event StreamEditorItem-event--boolean"
+          :class="{ 'is-false': !event.value }"
+        >
+          {{event.value}}
+        </div>
+
+        <div
           v-else-if="isArrayEvent(event)"
           class="StreamEditorItem-event StreamEditorItem-event--array"
         >
