@@ -9,6 +9,8 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@all-user/mod-a": "^0.0.1",
+    "@all-user/mod-b": "^0.0.1",
     "@types/lodash-es": "^4.17.3",
     "@types/uuid": "^3.4.5",
     "lodash-es": "^4.17.15",
@@ -35,5 +37,10 @@
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.5.3",
     "vue-template-compiler": "^2.6.10"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
   }
 }
