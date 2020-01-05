@@ -6,7 +6,7 @@ import * as operators from 'rxjs/operators';
 
 const StreamDatasetInstanceMap = defineInstanceMap<StreamDataset>('id');
 
-export class StreamEditorState {
+export class DomainStreamEditorState {
   public streamDatasetMap: InstanceMap<
     StreamDataset
   > = new StreamDatasetInstanceMap();
@@ -17,7 +17,9 @@ export class StreamEditorState {
   public message: string = '';
 }
 
-export class StreamEditorMutations extends Mutations<StreamEditorState> {
+export class DomainStreamEditorMutations extends Mutations<
+  DomainStreamEditorState
+> {
   public shiftEvent({ streamDatasetId }: { streamDatasetId: string }) {
     const streamDataset = this.state.streamDatasetMap.get(streamDatasetId);
     if (streamDataset == null) {
@@ -96,11 +98,11 @@ export class StreamEditorMutations extends Mutations<StreamEditorState> {
   }
 }
 
-export class StreamEditorActions extends Actions<
-  StreamEditorState,
-  StreamEditorGetters,
-  StreamEditorMutations,
-  StreamEditorActions
+export class DomainStreamEditorActions extends Actions<
+  DomainStreamEditorState,
+  DomainStreamEditorGetters,
+  DomainStreamEditorMutations,
+  DomainStreamEditorActions
 > {
   public pushEvent(payload: { streamDatasetId: string; event: StreamEvent }) {
     this.commit('pushEvent', payload);
@@ -119,14 +121,14 @@ export class StreamEditorActions extends Actions<
       });
 
     try {
+      this.commit('setErrorMessage', { message: '' });
+      this.commit('setMessage', { message: '' });
       const streams = new Function(
         'rxjs',
         'operators',
         'errorHandler',
         this.getters.sourceCode,
       )(rxjs, operators, errorHandler);
-      this.commit('setErrorMessage', { message: '' });
-      this.commit('setMessage', { message: '' });
       this.commit('setStreams', { streams });
       const subscriptions = this.getters.streamDatasets.map(
         (streamDataset, i) => {
@@ -147,7 +149,9 @@ export class StreamEditorActions extends Actions<
   }
 }
 
-export class StreamEditorGetters extends Getters<StreamEditorState> {
+export class DomainStreamEditorGetters extends Getters<
+  DomainStreamEditorState
+> {
   get streamDataset() {
     return (streamDatasetId: string) =>
       this.state.streamDatasetMap.get(streamDatasetId);
@@ -179,10 +183,10 @@ export class StreamEditorGetters extends Getters<StreamEditorState> {
   }
 }
 
-export const streamEditorModule = new Module({
+export const domainStreamEditorModule = new Module({
   namespaced: true,
-  state: StreamEditorState,
-  mutations: StreamEditorMutations,
-  getters: StreamEditorGetters,
-  actions: StreamEditorActions,
+  state: DomainStreamEditorState,
+  mutations: DomainStreamEditorMutations,
+  getters: DomainStreamEditorGetters,
+  actions: DomainStreamEditorActions,
 });

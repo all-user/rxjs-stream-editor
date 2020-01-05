@@ -35,8 +35,6 @@
         />
       </div>
     </div>
-    <div v-if="errorMessage.length" class="StreamEditor-errorMessage" v-text="errorMessage"/>
-    <div v-else-if="message.length" class="StreamEditor-message" v-text="message"/>
   </div>
 </template>
 <script lang="ts" src="./StreamEditor.ts"></script>

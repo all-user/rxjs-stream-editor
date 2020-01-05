@@ -1,5 +1,5 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import { streamEditorModule } from '../../store/modules/domain/internal';
+import { domainStreamEditorModule } from '../../store/modules/internal';
 import { StreamDataset } from '../../domain/internal';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
 import debounce from 'lodash-es/debounce';
@@ -11,12 +11,11 @@ import debounce from 'lodash-es/debounce';
 })
 export default class StreamEditor extends Vue.extend({
   computed: {
-    ...streamEditorModule.mapGetters(['streamDatasets', 'sourceCode']),
-    ...streamEditorModule.mapState(['errorMessage', 'message']),
+    ...domainStreamEditorModule.mapGetters(['streamDatasets', 'sourceCode']),
   },
   methods: {
-    ...streamEditorModule.mapActions(['evaluateSourceCode']),
-    ...streamEditorModule.mapMutations([
+    ...domainStreamEditorModule.mapActions(['evaluateSourceCode']),
+    ...domainStreamEditorModule.mapMutations([
       'pushStreamDataset',
       'popStreamDataset',
     ]),
@@ -46,7 +45,7 @@ export default class StreamEditor extends Vue.extend({
   public created() {
     const streamDatasets: StreamDataset[] = [
       new StreamDataset({
-        sourceCode: 'of()',
+        sourceCode: 'interval(1000)',
       }),
     ];
     streamDatasets.forEach(streamDataset => {

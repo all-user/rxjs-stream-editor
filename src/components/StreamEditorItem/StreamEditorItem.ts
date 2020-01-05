@@ -1,6 +1,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { StreamEvent, StreamDataset } from '../../domain/internal';
-import { streamEditorModule } from '../../store/modules/domain/internal';
+import { domainStreamEditorModule } from '../../store/modules/internal';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
 
 const createNoCircularJsonStringifyReplacer = () => {
@@ -23,7 +23,7 @@ const createNoCircularJsonStringifyReplacer = () => {
 })
 export default class StreamEditorItem extends Vue.extend({
   methods: {
-    ...streamEditorModule.mapMutations(['shiftEvent', 'setMessage']),
+    ...domainStreamEditorModule.mapMutations(['shiftEvent', 'setMessage']),
   },
 }) {
   @Prop() public dataset: StreamDataset | undefined;

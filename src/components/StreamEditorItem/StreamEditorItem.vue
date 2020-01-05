@@ -11,8 +11,8 @@
         v-for="event in events"
         class="StreamEditorItem-eventWrapper"
         :key="event.id"
-        @animationend="() => handleEventAnimationEnd(dataset)"
-        @click="() => handleEventClick(event)"
+        @animationend="handleEventAnimationEnd(dataset)"
+        @click="handleEventClick(event)"
       >
         <div
           v-if="isNumberEvent(event)"

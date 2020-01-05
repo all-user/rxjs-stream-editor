@@ -4,6 +4,7 @@ export interface InstanceMap<T> {
   all: T[];
   get(id: string): T | null;
   set(id: string, value: T): T;
+  has(id: string): boolean;
   delete(id: string): void;
 }
 
@@ -33,6 +34,10 @@ export const defineInstanceMap = <T>(idName: keyof T) => {
         [id]: value,
       };
       return value;
+    }
+
+    public has(id: string) {
+      return id in this.native;
     }
 
     public delete(id: string) {

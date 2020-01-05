@@ -2,6 +2,7 @@
   <div id="app">
     <AppHeader class="AppHeader"/>
     <StreamEditor class="StreamEditor"/>
+    <BottomNav/>
   </div>
 </template>
 
@@ -9,11 +10,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import AppHeader from './components/AppHeader/AppHeader.vue';
 import StreamEditor from './components/StreamEditor/StreamEditor.vue';
+import BottomNav from './components/BottomNav/BottomNav.vue';
 
 @Component({
   components: {
     AppHeader,
     StreamEditor,
+    BottomNav,
   },
 })
 export default class App extends Vue {}
