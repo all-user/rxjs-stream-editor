@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
-import { StreamEvent } from './internal';
-import { InstanceMap, defineInstanceMap } from '../core/internal';
+import { StreamEvent } from './StreamEvent';
+import { InstanceMap, defineInstanceMap } from '../lib/InstanceMap';
 
 const StreamEventInstanceMap = defineInstanceMap<StreamEvent>('id');
 

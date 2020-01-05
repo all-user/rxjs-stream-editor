@@ -2,7 +2,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { VueConstructor } from 'vue';
 import { domainStreamColorizerModule } from '../../store/modules/internal';
 import { Photoshop } from 'vue-color';
-import { ColorDefinition } from '@/domain/ColorDefinition';
+import { ColorDefinition } from '../../core/ColorDefinition';
 
 @Component({
   components: {

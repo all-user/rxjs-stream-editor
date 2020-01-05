@@ -1,6 +1,6 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import { domainStreamEditorModule } from '../../store/modules/internal';
-import { StreamDataset } from '../../domain/internal';
+import { StreamDataset } from '../../core/StreamDataset';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
 import debounce from 'lodash-es/debounce';
 

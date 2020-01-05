@@ -1,5 +1,5 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { StreamDataset } from '../../domain/internal';
+import { StreamDataset } from '../../core/StreamDataset';
 import { domainStreamEditorModule } from '../../store/modules/internal';
 
 @Component

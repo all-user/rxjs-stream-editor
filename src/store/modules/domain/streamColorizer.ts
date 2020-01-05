@@ -1,6 +1,6 @@
 import { Actions, Mutations, Module, Getters } from 'vuex-smart-module';
-import { defineInstanceMap, InstanceMap } from '../../../core/internal';
-import { ColorDefinition } from '../../../domain/ColorDefinition';
+import { defineInstanceMap, InstanceMap } from '../../../lib/InstanceMap';
+import { ColorDefinition } from '../../../core/ColorDefinition';
 
 const ColorDefinitionInstanceMap = defineInstanceMap<ColorDefinition>('id');
 

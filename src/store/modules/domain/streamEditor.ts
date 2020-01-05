@@ -1,6 +1,7 @@
 import { Module, Actions, Mutations, Getters } from 'vuex-smart-module';
-import { StreamDataset, StreamEvent } from '../../../domain/internal';
-import { InstanceMap, defineInstanceMap } from '../../../core/InstanceMap';
+import { StreamEvent } from '../../../core/StreamEvent';
+import { StreamDataset } from '../../../core/StreamDataset';
+import { InstanceMap, defineInstanceMap } from '../../../lib/InstanceMap';
 import * as rxjs from 'rxjs';
 import * as operators from 'rxjs/operators';
 

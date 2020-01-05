@@ -1,5 +1,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { StreamEvent, StreamDataset } from '../../domain/internal';
+import { StreamEvent } from '../../core/StreamEvent';
+import { StreamDataset } from '../../core/StreamDataset';
 import { domainStreamEditorModule } from '../../store/modules/internal';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
 
