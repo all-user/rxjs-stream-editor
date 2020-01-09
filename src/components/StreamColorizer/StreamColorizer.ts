@@ -74,11 +74,11 @@ export default class StreamColorizer extends Vue.extend({
   }
 
   get colorDefinitionColumnHeaders() {
-    return ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
   }
 
   get colorDefinitionRowHeaders() {
-    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    return ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
   }
 
   public getColorDefinitionStyle(
@@ -104,12 +104,12 @@ event => {
     case 0:
       return 'a1';
     case 1:
-      return 'a2';
+      return 'b1';
     case 2:
-      return 'a3';
+      return 'c1';
     case 3:
     default:
-      return 'a4';
+      return 'd1';
   }
 }
       `.trim(),

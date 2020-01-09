@@ -17,6 +17,7 @@
         <div
           v-if="isNumberEvent(event)"
           class="StreamEditorItem-event StreamEditorItem-event--number"
+          :style="getEventStyle(event)"
         >
           {{event.value}}
         </div>
@@ -24,6 +25,7 @@
         <div
           v-else-if="isStringEvent(event)"
           class="StreamEditorItem-event StreamEditorItem-event--string"
+          :style="getEventStyle(event)"
         >
           {{event.value}}
         </div>
@@ -32,6 +34,7 @@
           v-else-if="isBooleanEvent(event)"
           class="StreamEditorItem-event StreamEditorItem-event--boolean"
           :class="{ 'is-false': !event.value }"
+          :style="getEventStyle(event)"
         >
           {{event.value}}
         </div>
@@ -39,6 +42,7 @@
         <div
           v-else-if="isArrayEvent(event)"
           class="StreamEditorItem-event StreamEditorItem-event--array"
+          :style="getEventStyle(event)"
         >
           <div
             v-for="(detail, eventDetailIndex) in event.value"
@@ -49,12 +53,14 @@
         <div
           v-else-if="isNull(event) || isUndefined(event)"
           class="StreamEditorItem-event StreamEditorItem-event--nullOrUndefined"
+          :style="getEventStyle(event)"
         >
         </div>
 
         <div
           v-else
           class="StreamEditorItem-event StreamEditorItem-event--other"
+          :style="getEventStyle(event)"
         >
         </div>
       </div>

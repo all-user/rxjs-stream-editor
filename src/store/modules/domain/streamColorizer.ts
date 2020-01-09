@@ -30,6 +30,39 @@ export class DomainStreamColorizerGettters extends Getters<
       this.state.colorDefinitionMap.get(id),
     );
   }
+  get colorCodeGetter() {
+    return (selector: string) => {
+      const trimed = selector.toLowerCase().trim();
+      const matched = /^([a-i])([1-9])$/.exec(trimed);
+      if (matched) {
+        const [, colStr, rowStr] = matched;
+        const row = parseInt(rowStr, 10) - 1;
+        const column = parseInt(colStr, 19) - 10;
+        const index = row * 9 + column;
+        return this.state.colorDefinitionMap.get(
+          this.state.colorDefinitionIds[index],
+        )?.colorCode;
+      } else if (
+        /^(?:#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|rgba?\((?:\s*\d{1,3}\s*,?){3,4}\s*\))$/.test(
+          trimed,
+        )
+      ) {
+        return trimed;
+      } else {
+        return null;
+      }
+    };
+  }
+  get colorMatcher() {
+    try {
+      return new Function(
+        'event',
+        `return (${this.state.colorMatcherSourceCode})(event);`,
+      );
+    } catch {
+      return () => undefined;
+    }
+  }
 }
 
 export class DomainStreamColorizerMutations extends Mutations<
