@@ -100,16 +100,11 @@ export default class StreamColorizer extends Vue.extend({
     this.setColorMatcherSourceCode(
       `
 event => {
-  switch (event % 4) {
-    case 0:
-      return 'a1';
-    case 1:
-      return 'b1';
+  switch (event) {
     case 2:
-      return 'c1';
-    case 3:
+      return 'a1';
     default:
-      return 'd1';
+      return null;
   }
 }
       `.trim(),
