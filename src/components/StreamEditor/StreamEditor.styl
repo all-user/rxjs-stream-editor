@@ -1,3 +1,5 @@
+@import 'rxjs-se-stylus'
+
 .StreamEditor-root
   display: flex
   flex-flow: column nowrap
@@ -69,35 +71,3 @@
   width: 100%
   opacity: .4
   transition: opacity 200ms ease-in
-
-.StreamEditor-errorMessage
-  position: sticky
-  bottom: 0
-  flex: 0 0 auto
-  color: crimson
-  font-size: 14px
-  font-family: 'Fira Code', Menlo, monospace
-  border-top: solid 1px black
-  background-color: white
-  width: 100%
-  padding: 10px
-  white-space: pre
-  z-index: 2
-  max-height: 300px
-  overflow: auto
-
-.StreamEditor-message
-  position: sticky
-  bottom: 0
-  flex: 0 0 auto
-  color: black
-  font-size: 14px
-  font-family: 'Fira Code', Menlo, monospace
-  border-top: solid 1px black
-  background-color: white
-  width: 100%
-  padding: 10px
-  white-space: pre
-  z-index: 2
-  max-height: 300px
-  overflow: auto

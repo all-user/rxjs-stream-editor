@@ -1,6 +1,10 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { StreamEvent, StreamDataset } from '../../domain/internal';
-import { streamEditorModule } from '../../store/modules/domain/internal';
+import { StreamEvent } from '../../core/StreamEvent';
+import { StreamDataset } from '../../core/StreamDataset';
+import {
+  domainStreamEditorModule,
+  domainStreamColorizerModule,
+} from '../../store/modules/internal';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
 
 const createNoCircularJsonStringifyReplacer = () => {
@@ -22,8 +26,14 @@ const createNoCircularJsonStringifyReplacer = () => {
   },
 })
 export default class StreamEditorItem extends Vue.extend({
+  computed: {
+    ...domainStreamColorizerModule.mapGetters([
+      'colorCodeGetter',
+      'colorMatcher',
+    ]),
+  },
   methods: {
-    ...streamEditorModule.mapMutations(['shiftEvent', 'setMessage']),
+    ...domainStreamEditorModule.mapMutations(['shiftEvent', 'setMessage']),
   },
 }) {
   @Prop() public dataset: StreamDataset | undefined;
@@ -32,6 +42,12 @@ export default class StreamEditorItem extends Vue.extend({
 
   get events() {
     return this.dataset ? this.dataset.events : [];
+  }
+
+  public getEventStyle(event: StreamEvent): Partial<CSSStyleDeclaration> {
+    const backgroundColor =
+      this.colorCodeGetter(this.colorMatcher(event.value) ?? '') ?? '';
+    return { backgroundColor };
   }
 
   public isNumberEvent(event: StreamEvent) {

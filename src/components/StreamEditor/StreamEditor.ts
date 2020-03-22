@@ -1,6 +1,6 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import { streamEditorModule } from '../../store/modules/domain/internal';
-import { StreamDataset } from '../../domain/internal';
+import { domainStreamEditorModule } from '../../store/modules/internal';
+import { StreamDataset } from '../../core/StreamDataset';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
 import debounce from 'lodash-es/debounce';
 
@@ -11,12 +11,11 @@ import debounce from 'lodash-es/debounce';
 })
 export default class StreamEditor extends Vue.extend({
   computed: {
-    ...streamEditorModule.mapGetters(['streamDatasets', 'sourceCode']),
-    ...streamEditorModule.mapState(['errorMessage', 'message']),
+    ...domainStreamEditorModule.mapGetters(['streamDatasets', 'sourceCode']),
   },
   methods: {
-    ...streamEditorModule.mapActions(['evaluateSourceCode']),
-    ...streamEditorModule.mapMutations([
+    ...domainStreamEditorModule.mapActions(['evaluateSourceCode']),
+    ...domainStreamEditorModule.mapMutations([
       'pushStreamDataset',
       'popStreamDataset',
     ]),
@@ -41,17 +40,6 @@ export default class StreamEditor extends Vue.extend({
 
   public handleRemoveStream() {
     this.popStreamDataset();
-  }
-
-  public created() {
-    const streamDatasets: StreamDataset[] = [
-      new StreamDataset({
-        sourceCode: 'of()',
-      }),
-    ];
-    streamDatasets.forEach(streamDataset => {
-      this.pushStreamDataset({ streamDataset });
-    });
   }
 
   public beforeMount() {

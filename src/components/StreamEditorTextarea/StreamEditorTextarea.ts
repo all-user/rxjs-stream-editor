@@ -1,11 +1,11 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { StreamDataset } from '../../domain/internal';
-import { streamEditorModule } from '../../store/modules/domain/internal';
+import { StreamDataset } from '../../core/StreamDataset';
+import { domainStreamEditorModule } from '../../store/modules/internal';
 
 @Component
 export default class StreamEditorTextarea extends Vue.extend({
   methods: {
-    ...streamEditorModule.mapMutations(['setSourceCode']),
+    ...domainStreamEditorModule.mapMutations(['setSourceCode']),
   },
 }) {
   @Prop() public dataset: StreamDataset | undefined;

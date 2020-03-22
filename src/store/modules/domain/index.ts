@@ -1,9 +1,13 @@
 import { Module } from 'vuex-smart-module';
-import { streamEditorModule } from './streamEditor';
+import {
+  domainStreamEditorModule,
+  domainStreamColorizerModule,
+} from '../internal';
 
 export const domainModule = new Module({
   namespaced: true,
   modules: {
-    streamEditor: streamEditorModule,
+    streamEditor: domainStreamEditorModule,
+    streamColorizer: domainStreamColorizerModule,
   },
 });

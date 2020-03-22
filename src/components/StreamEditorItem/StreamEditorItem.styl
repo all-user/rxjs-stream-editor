@@ -1,8 +1,10 @@
+@import 'rxjs-se-stylus'
+
 @keyframes event-motion
   0%
-    transform: translateX(0vw)
+    transform: translate3d(0vw,0,0)
   100%
-    transform: translateX(-100vw)
+    transform: translate3d(-100vw,0,0)
 
 .StreamEditorItem-root
   display: flex
@@ -95,7 +97,7 @@
     font-size: 12px
     width: 2px
     height: 2px
-    font-family: 'Fira Code', Menlo, monospace
+    font-family: $se-font-family-monospace
   &::before
     content: '['
     transform: rotate(90deg)
@@ -112,7 +114,7 @@
   width: auto
   height: 20px
   padding: 2px
-  font-family: 'Fira Code', Menlo, monospace
+  font-family: $se-font-family-monospace
   font-size: 16px
   color: black
   border-radius: 6px
@@ -126,7 +128,7 @@
   width: auto
   height: 20px
   padding: 2px
-  font-family: 'Fira Code', Menlo, monospace
+  font-family: $se-font-family-monospace
   font-size: 16px
   color: black
   border-radius: 6px
@@ -142,7 +144,7 @@
   width: auto
   height: 20px
   padding: 2px
-  font-family: 'Fira Code', Menlo, monospace
+  font-family: $se-font-family-monospace
   font-size: 16px
   color: black
   border-radius: 6px
@@ -160,7 +162,7 @@
   width: 20px
   height: 20px
   padding: 2px
-  font-family: 'Fira Code', Menlo, monospace
+  font-family: $se-font-family-monospace
   font-size: 16px
   color: black
   border-radius: 10px
@@ -175,7 +177,7 @@
   width: 20px
   height: 20px
   padding: 2px
-  font-family: 'Fira Code', Menlo, monospace
+  font-family: $se-font-family-monospace
   font-size: 16px
   color: black
   border-radius: 10px
