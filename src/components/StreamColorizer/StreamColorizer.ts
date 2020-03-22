@@ -24,7 +24,6 @@ export default class StreamColorizer extends Vue.extend({
     ...domainStreamColorizerModule.mapMutations([
       'setColorMatcherSourceCode',
       'setColorCode',
-      'setColorDefinitions',
       'selectColorDefinition',
     ]),
   },
@@ -91,44 +90,5 @@ export default class StreamColorizer extends Vue.extend({
 
   public handleColorDefinitionClick(colorDef: ColorDefinition) {
     this.selectColorDefinition(colorDef.id);
-  }
-
-  public initializeColorMatcherSourceCode() {
-    if (this.colorMatcherSourceCode.length) {
-      return;
-    }
-    this.setColorMatcherSourceCode(
-      `
-event => {
-  switch (event) {
-    case 2:
-      return 'a1';
-    default:
-      return null;
-  }
-}
-      `.trim(),
-    );
-  }
-
-  public initializeColorDefinitions() {
-    if (this.colorDefinitions.length) {
-      return;
-    }
-    const blankDefinitions = new Array(9 * 9 - 4)
-      .fill(void 0)
-      .map(() => new ColorDefinition());
-    const definitions = [
-      new ColorDefinition({ colorCode: '#FC5137' }),
-      new ColorDefinition({ colorCode: '#72D329' }),
-      new ColorDefinition({ colorCode: '#FEC137' }),
-      new ColorDefinition({ colorCode: '#348FBF' }),
-    ].concat(blankDefinitions);
-    this.setColorDefinitions(definitions);
-  }
-
-  public created() {
-    this.initializeColorMatcherSourceCode();
-    this.initializeColorDefinitions();
   }
 }

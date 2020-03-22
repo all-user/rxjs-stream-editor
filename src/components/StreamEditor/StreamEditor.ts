@@ -42,26 +42,6 @@ export default class StreamEditor extends Vue.extend({
     this.popStreamDataset();
   }
 
-  public created() {
-    const streamDatasets: StreamDataset[] = [
-      new StreamDataset({
-        sourceCode: "fromEvent(document.defaultView, 'click')",
-      }),
-      new StreamDataset({
-        sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))))',
-      }),
-      new StreamDataset({
-        sourceCode: '_1$.pipe(map(ev => ev.length))',
-      }),
-      new StreamDataset({
-        sourceCode: '_2$.pipe(filter(ev => ev === 2))',
-      }),
-    ];
-    streamDatasets.forEach(streamDataset => {
-      this.pushStreamDataset({ streamDataset });
-    });
-  }
-
   public beforeMount() {
     this.evaluateSourceCode();
   }
