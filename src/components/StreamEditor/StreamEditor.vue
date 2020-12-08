@@ -22,10 +22,7 @@
       <div
         class="StreamEditor-streamItemWrapper StreamEditor-streamItemWrapper--addStreamItem"
       >
-        <div
-          @click="handleAddStream"
-          class="StreamEditor-addStreamItemButton"
-        >
+        <div @click="handleAddStream" class="StreamEditor-addStreamItemButton">
           +
         </div>
         <StreamEditorItem

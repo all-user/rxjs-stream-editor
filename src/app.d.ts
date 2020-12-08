@@ -4,4 +4,4 @@ type VueColorObject = {
   hsv: { h: number; s: number; v: number; a: number };
   rgba: { r: number; g: number; b: number; a: number };
   a: number;
-}
+};

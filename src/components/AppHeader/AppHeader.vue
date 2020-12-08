@@ -28,5 +28,3 @@
 </template>
 <script lang="ts" src="./AppHeader.ts"></script>
 <style lang="stylus" src="./AppHeader.styl" scoped></style>
-
-

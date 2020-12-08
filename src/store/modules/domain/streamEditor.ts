@@ -14,8 +14,8 @@ export class DomainStreamEditorState {
   public streamDatasetIds: string[] = [];
   public streams: Array<rxjs.Observable<any>> = [];
   public subscriptions: rxjs.Subscription[] = [];
-  public errorMessage: string = '';
-  public message: string = '';
+  public errorMessage = '';
+  public message = '';
 }
 
 export class DomainStreamEditorMutations extends Mutations<

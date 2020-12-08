@@ -9,5 +9,3 @@
 </template>
 <script lang="ts" src="./StreamEditorTextarea.ts"></script>
 <style lang="stylus" src="./StreamEditorTextarea.styl" scoped></style>
-
-
