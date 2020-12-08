@@ -26,5 +26,42 @@
     </nav>
   </header>
 </template>
-<script lang="ts" src="./AppHeader.ts"></script>
-<style lang="stylus" src="./AppHeader.styl" scoped></style>
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+const AppHeader = defineComponent({});
+
+export default AppHeader;
+</script>
+<style lang="stylus" scoped>
+.AppHeader-root
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+  justify-content: flex-star
+  background-color: ivory
+  padding: 5px 20px
+  @media (max-width: 640px)
+    padding: 10px 5px
+
+.AppHeader-title
+  flex: 1 0 auto
+  color: black
+  margin: 0
+  font-size: 32px
+  @media (max-width: 640px)
+    font-size: 17px
+
+.AppHeader-nav
+  flex: 0 0 auto
+
+.AppHeader-link
+  color: black
+  font-size: 16px
+  font-weight: bold
+  text-decoration: none
+  margin: 0 0 0 20px
+  @media (max-width: 640px)
+    font-size: 10px
+    margin: 0 0 0 8px
+</style>
