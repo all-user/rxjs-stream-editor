@@ -1,4 +1,5 @@
-import { Component, Vue } from 'vue-property-decorator';
+import { defineComponent } from 'vue';
 
-@Component
-export default class AppHeader extends Vue {}
+const AppHeader = defineComponent({});
+
+export default AppHeader;

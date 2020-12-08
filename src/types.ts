@@ -1,4 +1,4 @@
-type VueColorObject = {
+export type VueColorObject = {
   hex: string;
   hsl: { h: number; s: number; l: number; a: number };
   hsv: { h: number; s: number; v: number; a: number };

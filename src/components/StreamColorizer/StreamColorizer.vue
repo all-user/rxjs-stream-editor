@@ -1,7 +1,7 @@
 <template>
   <div class="StreamColorizer-root">
     <div class="StreamColorizer-colorMatcherRoot">
-      <textarea-autosize
+      <textarea
         class="StreamColorizer-colorMatcherSourceCode"
         v-model="boundColorMatcherSourceCode"
         rows="1"

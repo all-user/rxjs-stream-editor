@@ -1,85 +1,74 @@
 <template>
   <div id="app">
-    <AppHeader class="AppHeader"/>
-    <StreamEditor class="StreamEditor"/>
-    <BottomNav/>
+    <AppHeader class="AppHeader" />
+    <StreamEditor class="StreamEditor" />
+    <BottomNav />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
 import AppHeader from './components/AppHeader/AppHeader.vue';
 import StreamEditor from './components/StreamEditor/StreamEditor.vue';
 import BottomNav from './components/BottomNav/BottomNav.vue';
+import { defineComponent } from 'vue';
 import { StreamDataset } from './core/StreamDataset';
-import {
-  domainStreamEditorModule,
-  domainStreamColorizerModule,
-} from './store/modules/internal';
 import { ColorDefinition } from './core/ColorDefinition';
+import { useStore } from './store';
 
-@Component({
+const App = defineComponent({
   components: {
     AppHeader,
     StreamEditor,
     BottomNav,
   },
-})
-export default class App extends Vue.extend({
-  computed: {
-    ...domainStreamColorizerModule.mapState(['colorMatcherSourceCode']),
-    ...domainStreamColorizerModule.mapGetters(['colorDefinitions']),
-  },
-  methods: {
-    ...domainStreamEditorModule.mapMutations(['pushStreamDataset']),
-    ...domainStreamColorizerModule.mapMutations([
-      'setColorMatcherSourceCode',
-      'setColorDefinitions',
-    ]),
-  },
-}) {
-  public initializeStreamDatasets() {
-    const streamDatasets: StreamDataset[] = [
-      new StreamDataset({
-        sourceCode: "fromEvent(document.defaultView, 'click')",
-      }),
-      new StreamDataset({
-        sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))))',
-      }),
-      new StreamDataset({
-        sourceCode: '_1$.pipe(map(ev => ev.length))',
-      }),
-      new StreamDataset({
-        sourceCode: '_2$.pipe(filter(ev => ev === 2))',
-      }),
-    ];
-    streamDatasets.forEach(streamDataset => {
-      this.pushStreamDataset({ streamDataset });
-    });
-  }
+  setup() {
+    const store = useStore();
 
-  public initializeColorDefinitions() {
-    if (this.colorDefinitions.length) {
-      return;
-    }
-    const blankDefinitions = new Array(9 * 9 - 4)
-      .fill(void 0)
-      .map(() => new ColorDefinition());
-    const definitions = [
-      new ColorDefinition({ colorCode: '#FC5137' }),
-      new ColorDefinition({ colorCode: '#72D329' }),
-      new ColorDefinition({ colorCode: '#FEC137' }),
-      new ColorDefinition({ colorCode: '#348FBF' }),
-    ].concat(blankDefinitions);
-    this.setColorDefinitions(definitions);
-  }
+    const initializeStreamDatasets = () => {
+      const streamDatasets: StreamDataset[] = [
+        new StreamDataset({
+          sourceCode: "fromEvent(document.defaultView, 'click')",
+        }),
+        new StreamDataset({
+          sourceCode: '_0$.pipe(buffer(_0$.pipe(debounceTime(250))))',
+        }),
+        new StreamDataset({
+          sourceCode: '_1$.pipe(map(ev => ev.length))',
+        }),
+        new StreamDataset({
+          sourceCode: '_2$.pipe(filter(ev => ev === 2))',
+        }),
+      ];
+      streamDatasets.forEach(streamDataset => {
+        store.commit('domain/streamEditor/pushStreamDataset', {
+          streamDataset,
+        });
+      });
+    };
 
-  public initializeColorMatcherSourceCode() {
-    if (this.colorMatcherSourceCode.length) {
-      return;
-    }
-    this.setColorMatcherSourceCode(
-      `
+    const initializeColorDefinitions = () => {
+      if (store.getters['domain/streamColorizer/colorDefinitions'].length) {
+        return;
+      }
+      const blankDefinitions = new Array(9 * 9 - 4)
+        .fill(void 0)
+        .map(() => new ColorDefinition());
+      const definitions = [
+        new ColorDefinition({ colorCode: '#FC5137' }),
+        new ColorDefinition({ colorCode: '#72D329' }),
+        new ColorDefinition({ colorCode: '#FEC137' }),
+        new ColorDefinition({ colorCode: '#348FBF' }),
+      ].concat(blankDefinitions);
+      store.commit('domain/streamColorizer/setColorDefinitions', definitions);
+    };
+
+    const initializeColorMatcherSourceCode = () => {
+      if (store.state.domain.streamColorizer.colorMatcherSourceCode.length) {
+        return;
+      }
+      store.commit(
+        'domain/streamColorizer/setColorMatcherSourceCode',
+        `
 event => {
   switch (event) {
     case 2:
@@ -88,16 +77,17 @@ event => {
       return null;
   }
 }
-      `.trim(),
-    );
-  }
+        `.trim(),
+      );
+    };
 
-  public created() {
-    this.initializeStreamDatasets();
-    this.initializeColorDefinitions();
-    this.initializeColorMatcherSourceCode();
-  }
-}
+    initializeStreamDatasets();
+    initializeColorDefinitions();
+    initializeColorMatcherSourceCode();
+  },
+});
+
+export default App;
 </script>
 <style lang="stylus">
 *

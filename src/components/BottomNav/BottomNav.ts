@@ -1,28 +1,33 @@
-import { Component, Vue } from 'vue-property-decorator';
-import {
-  domainStreamEditorModule,
-  uiBottomNavModule,
-} from '../../store/modules/internal';
+import { useStore } from '../../store';
+import { defineComponent } from 'vue';
 import MessageOutput from '../MessageOutput/MessageOutput.vue';
 import StreamColorizer from '../StreamColorizer/StreamColorizer.vue';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
-@Component({
+const BottomNav = defineComponent({
   components: {
     MessageOutput,
     StreamColorizer,
   },
-})
-export default class BottomNav extends Vue.extend({
   computed: {
-    ...domainStreamEditorModule.mapState(['errorMessage', 'message']),
-    ...uiBottomNavModule.mapState(['enabled']),
-    ...uiBottomNavModule.mapGetters(['isColorizerSelected']),
+    ...mapState('domain/streamEditor', ['errorMessage', 'message']),
+    ...mapState('ui/bottomNav', ['enabled']),
+    ...mapGetters('ui/bottomNav', ['isColorizerSelected']),
   },
   methods: {
-    ...uiBottomNavModule.mapActions(['enable', 'selectContentOrToggleEnabled']),
+    ...mapActions('ui/bottomNav', ['enable']),
   },
-}) {
-  public selectColorizer() {
-    this.selectContentOrToggleEnabled('colorizer');
-  }
-}
+  setup() {
+    const store = useStore();
+
+    const selectColorizer = () => {
+      store.dispatch('ui/bottomNav/selectContentOrToggleEnabled', 'colorizer');
+    };
+
+    return {
+      selectColorizer,
+    };
+  },
+});
+
+export default BottomNav;

@@ -1,7 +1,6 @@
 <template>
-  <textarea-autosize
+  <textarea
     :class="{ 'StreamEditorTextarea-input': true, 'is-disabled': disabled }"
-    type="text"
     v-model="sourceCode"
     rows="1"
     :disabled="disabled"

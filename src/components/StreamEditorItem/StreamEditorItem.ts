@@ -1,15 +1,12 @@
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { computed, defineComponent } from 'vue';
 import { StreamEvent } from '../../core/StreamEvent';
 import { StreamDataset } from '../../core/StreamDataset';
-import {
-  domainStreamEditorModule,
-  domainStreamColorizerModule,
-} from '../../store/modules/internal';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
+import { useStore } from '../../store';
 
 const createNoCircularJsonStringifyReplacer = () => {
-  const seen: any[] = [];
-  return (_: string, value: any) => {
+  const seen: unknown[] = [];
+  return (_: string, value: unknown) => {
     if (value != null && typeof value === 'object') {
       if (seen.indexOf(value) >= 0) {
         return;
@@ -20,72 +17,79 @@ const createNoCircularJsonStringifyReplacer = () => {
   };
 };
 
-@Component({
+const StreamEditorItem = defineComponent({
   components: {
     StreamEditorTextarea,
   },
-})
-export default class StreamEditorItem extends Vue.extend({
-  computed: {
-    ...domainStreamColorizerModule.mapGetters([
-      'colorCodeGetter',
-      'colorMatcher',
-    ]),
+  props: {
+    dataset: {
+      type: StreamDataset,
+      required: false,
+    },
+    index: {
+      type: Number,
+      required: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
-  methods: {
-    ...domainStreamEditorModule.mapMutations(['shiftEvent', 'setMessage']),
+  setup(props) {
+    const store = useStore();
+
+    const events = computed(() => (props.dataset ? props.dataset.events : []));
+
+    const getEventStyle = (
+      event: StreamEvent,
+    ): Partial<CSSStyleDeclaration> => {
+      const backgroundColor =
+        store.getters['domain/streamColorizer/colorCodeGetter'](
+          store.getters['domain/streamColorizer/colorMatcher'](event.value) ??
+            '',
+        ) ?? '';
+      return { backgroundColor };
+    };
+
+    const isNumberEvent = (event: StreamEvent) =>
+      event.value != null && event.value.__proto__ === Number.prototype;
+    const isStringEvent = (event: StreamEvent) =>
+      event.value != null && event.value.__proto__ === String.prototype;
+    const isBooleanEvent = (event: StreamEvent) =>
+      event.value != null && event.value.__proto__ === Boolean.prototype;
+    const isArrayEvent = (event: StreamEvent) => Array.isArray(event.value);
+    const isNull = (event: StreamEvent) => event.value === null;
+    const isUndefined = (event: StreamEvent) => event.value === undefined;
+
+    const handleEventAnimationEnd = (streamDataset?: StreamDataset) => {
+      if (!streamDataset) return;
+      store.commit('domain/streamEditor/shiftEvent', {
+        streamDatasetId: streamDataset.id,
+      });
+    };
+
+    const handleEventClick = (event: StreamEvent) => {
+      const jsonString = JSON.stringify(
+        event.value,
+        createNoCircularJsonStringifyReplacer(),
+        2,
+      );
+      store.commit('domain/streamEditor/setMessage', { message: jsonString });
+    };
+
+    return {
+      handleEventAnimationEnd,
+      handleEventClick,
+      isNumberEvent,
+      isStringEvent,
+      isBooleanEvent,
+      isArrayEvent,
+      isNull,
+      isUndefined,
+      getEventStyle,
+      events,
+    };
   },
-}) {
-  @Prop() public dataset: StreamDataset | undefined;
-  @Prop({ required: true }) public index!: boolean;
-  @Prop({ default: false }) public disabled!: boolean;
+});
 
-  get events() {
-    return this.dataset ? this.dataset.events : [];
-  }
-
-  public getEventStyle(event: StreamEvent): Partial<CSSStyleDeclaration> {
-    const backgroundColor =
-      this.colorCodeGetter(this.colorMatcher(event.value) ?? '') ?? '';
-    return { backgroundColor };
-  }
-
-  public isNumberEvent(event: StreamEvent) {
-    return event.value != null && event.value.__proto__ === Number.prototype;
-  }
-
-  public isStringEvent(event: StreamEvent) {
-    return event.value != null && event.value.__proto__ === String.prototype;
-  }
-
-  public isBooleanEvent(event: StreamEvent) {
-    return event.value != null && event.value.__proto__ === Boolean.prototype;
-  }
-
-  public isArrayEvent(event: StreamEvent) {
-    return Array.isArray(event.value);
-  }
-
-  public isNull(event: StreamEvent) {
-    return event.value === null;
-  }
-
-  public isUndefined(event: StreamEvent) {
-    return event.value === undefined;
-  }
-
-  public handleEventAnimationEnd(streamDataset: StreamDataset) {
-    this.shiftEvent({
-      streamDatasetId: streamDataset.id,
-    });
-  }
-
-  public handleEventClick(event: StreamEvent) {
-    const jsonString = JSON.stringify(
-      event.value,
-      createNoCircularJsonStringifyReplacer(),
-      2,
-    );
-    this.setMessage({ message: jsonString });
-  }
-}
+export default StreamEditorItem;

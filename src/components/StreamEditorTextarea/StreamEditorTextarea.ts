@@ -1,27 +1,40 @@
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { useStore } from '../../store';
 import { StreamDataset } from '../../core/StreamDataset';
-import { domainStreamEditorModule } from '../../store/modules/internal';
+import { computed, defineComponent } from 'vue';
 
-@Component
-export default class StreamEditorTextarea extends Vue.extend({
-  methods: {
-    ...domainStreamEditorModule.mapMutations(['setSourceCode']),
+const StreamEditorTextarea = defineComponent({
+  props: {
+    dataset: {
+      type: StreamDataset,
+      required: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
-}) {
-  @Prop() public dataset: StreamDataset | undefined;
-  @Prop({ default: false }) public disabled!: boolean;
+  setup(props) {
+    const store = useStore();
 
-  get sourceCode() {
-    return this.dataset ? this.dataset.sourceCode : '';
-  }
-
-  set sourceCode(value: string) {
-    if (this.dataset == null) {
-      return;
-    }
-    this.setSourceCode({
-      streamDatasetId: this.dataset.id,
-      sourceCode: value,
+    const sourceCode = computed({
+      get() {
+        return props.dataset?.sourceCode || '';
+      },
+      set(value: string) {
+        if (props.dataset == null) {
+          return;
+        }
+        store.commit('domain/streamEditor/setSourceCode', {
+          streamDatasetId: props.dataset.id,
+          sourceCode: value,
+        });
+      },
     });
-  }
-}
+
+    return {
+      sourceCode,
+    };
+  },
+});
+
+export default StreamEditorTextarea;

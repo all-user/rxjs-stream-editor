@@ -1,94 +1,133 @@
-import { Component, Vue } from 'vue-property-decorator';
-import { VueConstructor } from 'vue';
-import { domainStreamColorizerModule } from '../../store/modules/internal';
+import { defineComponent, ref, Component, computed } from 'vue';
 import { Photoshop } from 'vue-color';
+import { mapGetters, mapState } from 'vuex';
 import { ColorDefinition } from '../../core/ColorDefinition';
+import { useStore } from '../../store';
+import { VueColorObject } from '../../types';
 
-@Component({
+const StreamColorizer = defineComponent({
   components: {
-    PhotoshopPicker: Photoshop as VueConstructor,
+    PhotoshopPicker: Photoshop,
   },
-})
-export default class StreamColorizer extends Vue.extend({
   computed: {
-    ...domainStreamColorizerModule.mapState([
-      'colorMatcherSourceCode',
-      'selectedColorDefinitionId',
-    ]),
-    ...domainStreamColorizerModule.mapGetters([
-      'selectedColorCode',
-      'colorDefinitions',
-    ]),
+    ...mapState('domain/streamColorizer', ['selectedColorDefinitionId']),
+    ...mapGetters('domain/streamColorizer', ['colorDefinitions']),
   },
-  methods: {
-    ...domainStreamColorizerModule.mapMutations([
-      'setColorMatcherSourceCode',
-      'setColorCode',
-      'selectColorDefinition',
-    ]),
-  },
-}) {
-  public $refs!: {
-    colorPicker: Vue & { currentColor: string };
-  };
+  setup() {
+    const store = useStore();
 
-  get boundColorMatcherSourceCode() {
-    return this.colorMatcherSourceCode;
-  }
-  set boundColorMatcherSourceCode(sourceCode: string) {
-    this.setColorMatcherSourceCode(sourceCode);
-  }
+    const colorPicker = ref<null | (Component & { currentColor: string })>(
+      null,
+    );
 
-  get boundColorCode(): string | null {
-    return this.selectedColorCode ?? '#ffffff';
-  }
-  public handleColorPickerInput(results: VueColorObject) {
-    if (this.selectedColorDefinitionId == null) {
-      return;
-    }
-    const {
-      rgba: { r, g, b, a },
-      hex,
-    } = results;
-    this.setColorCode({
-      colorDefinitionId: this.selectedColorDefinitionId,
-      colorCode: a < 1 ? `rgba(${r},${g},${b},${a})` : hex,
+    const boundColorMatcherSourceCode = computed({
+      get() {
+        return store.state.domain.streamColorizer.colorMatcherSourceCode;
+      },
+      set(sourceCode: string) {
+        store.commit(
+          'domain/streamColorizer/setColorMatcherSourceCode',
+          sourceCode,
+        );
+      },
     });
-  }
-  public handleColorPickerOk() {
-    if (this.selectedColorDefinitionId == null) {
-      return;
-    }
-    this.selectColorDefinition(null);
-  }
-  public handleColorPickerCancel() {
-    if (this.selectedColorDefinitionId == null) {
-      return;
-    }
-    this.setColorCode({
-      colorDefinitionId: this.selectedColorDefinitionId,
-      colorCode: this.$refs.colorPicker.currentColor,
+
+    const boundColorCode = computed((): string | null => {
+      return (
+        store.getters['domain/streamColorizer/selectedColorCode'] ?? '#ffffff'
+      );
     });
-    this.selectColorDefinition(null);
-  }
 
-  get colorDefinitionColumnHeaders() {
-    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-  }
-
-  get colorDefinitionRowHeaders() {
-    return ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-  }
-
-  public getColorDefinitionStyle(
-    colorDef: ColorDefinition,
-  ): Partial<CSSStyleDeclaration> {
-    return {
-      backgroundColor: colorDef.colorCode ?? 'transparent',
+    const handleColorPickerInput = (results: VueColorObject) => {
+      if (
+        store.state.domain.streamColorizer.selectedColorDefinitionId == null
+      ) {
+        return;
+      }
+      const {
+        rgba: { r, g, b, a },
+        hex,
+      } = results;
+      store.commit('domain/streamColorizer/setColorCode', {
+        colorDefinitionId:
+          store.state.domain.streamColorizer.selectedColorDefinitionId,
+        colorCode: a < 1 ? `rgba(${r},${g},${b},${a})` : hex,
+      });
     };
-  }
 
-  public handleColorDefinitionClick(colorDef: ColorDefinition) {
-    this.selectColorDefinition(colorDef.id);
-  }
-}
+    const handleColorPickerOk = () => {
+      if (
+        store.state.domain.streamColorizer.selectedColorDefinitionId == null
+      ) {
+        return;
+      }
+      store.commit('domain/streamColorizer/selectColorDefinition', null);
+    };
+
+    const handleColorPickerCancel = () => {
+      if (
+        store.state.domain.streamColorizer.selectedColorDefinitionId == null ||
+        colorPicker.value == null
+      ) {
+        return;
+      }
+      store.commit('domain/streamColorizer/setColorCode', {
+        colorDefinitionId:
+          store.state.domain.streamColorizer.selectedColorDefinitionId,
+        colorCode: colorPicker.value.currentColor,
+      });
+      store.commit('domain/streamColorizer/selectColorDefinition', null);
+    };
+
+    const colorDefinitionColumnHeaders = Object.freeze([
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+    ] as const);
+
+    const colorDefinitionRowHeaders = Object.freeze([
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+    ] as const);
+
+    const getColorDefinitionStyle = (
+      colorDef: ColorDefinition,
+    ): Partial<CSSStyleDeclaration> => {
+      return {
+        backgroundColor: colorDef.colorCode ?? 'transparent',
+      };
+    };
+
+    const handleColorDefinitionClick = (colorDef: ColorDefinition) => {
+      store.commit('domain/streamColorizer/selectColorDefinition', colorDef.id);
+    };
+
+    return {
+      colorDefinitionColumnHeaders,
+      colorDefinitionRowHeaders,
+      handleColorDefinitionClick,
+      getColorDefinitionStyle,
+      handleColorPickerCancel,
+      handleColorPickerOk,
+      handleColorPickerInput,
+      boundColorCode,
+      boundColorMatcherSourceCode,
+      colorPicker,
+    };
+  },
+});
+
+export default StreamColorizer;

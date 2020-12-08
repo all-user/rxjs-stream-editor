@@ -1,9 +1,10 @@
-import { Component, Vue } from 'vue-property-decorator';
-import { domainStreamEditorModule } from '../../store/modules/internal';
+import { defineComponent } from 'vue';
+import { mapState } from 'vuex';
 
-@Component
-export default class MessageOutput extends Vue.extend({
+const MessageOutput = defineComponent({
   computed: {
-    ...domainStreamEditorModule.mapState(['errorMessage', 'message']),
+    ...mapState('domain/streamEditor', ['errorMessage', 'message']),
   },
-}) {}
+});
+
+export default MessageOutput;

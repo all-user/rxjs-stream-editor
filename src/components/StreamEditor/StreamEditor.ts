@@ -1,48 +1,53 @@
-import { Component, Watch, Vue } from 'vue-property-decorator';
-import { domainStreamEditorModule } from '../../store/modules/internal';
+import debounce from 'lodash-es/debounce';
+import { mapGetters } from 'vuex';
+import { defineComponent, watch, onBeforeMount, computed } from 'vue';
+import { useStore } from '../../store';
 import { StreamDataset } from '../../core/StreamDataset';
 import StreamEditorItem from '../StreamEditorItem/StreamEditorItem.vue';
-import debounce from 'lodash-es/debounce';
 
-@Component({
+const StreamEditor = defineComponent({
   components: {
     StreamEditorItem,
   },
-})
-export default class StreamEditor extends Vue.extend({
   computed: {
-    ...domainStreamEditorModule.mapGetters(['streamDatasets', 'sourceCode']),
+    ...mapGetters('domain/streamEditor', ['streamDatasets']),
   },
-  methods: {
-    ...domainStreamEditorModule.mapActions(['evaluateSourceCode']),
-    ...domainStreamEditorModule.mapMutations([
-      'pushStreamDataset',
-      'popStreamDataset',
-    ]),
-  },
-}) {
-  @Watch('sourceCode')
-  public watchSourceCode() {
-    this.evaluateSourceCodeDebounced();
-  }
+  setup() {
+    const store = useStore();
 
-  get evaluateSourceCodeDebounced() {
-    return debounce(this.evaluateSourceCode, 500);
-  }
+    const evaluateSourceCodeDebounced = debounce(
+      () => store.dispatch('domain/streamEditor/evaluateSourceCode'),
+      500,
+    );
 
-  public handleAddStream() {
-    this.pushStreamDataset({
-      streamDataset: new StreamDataset({
-        sourceCode: `_${this.streamDatasets.length - 1}$`,
-      }),
+    const sourceCode = computed(
+      () => store.getters['domain/streamEditor/sourceCode'],
+    );
+
+    watch(sourceCode, evaluateSourceCodeDebounced);
+
+    const handleAddStream = () => {
+      store.commit('domain/streamEditor/pushStreamDataset', {
+        streamDataset: new StreamDataset({
+          sourceCode: `_${store.getters['domain/streamEditor/streamDatasets']
+            .length - 1}$`,
+        }),
+      });
+    };
+
+    const handleRemoveStream = () => {
+      store.commit('domain/streamEditor/popStreamDataset');
+    };
+
+    onBeforeMount(() => {
+      store.dispatch('domain/streamEditor/evaluateSourceCode');
     });
-  }
 
-  public handleRemoveStream() {
-    this.popStreamDataset();
-  }
+    return {
+      handleAddStream,
+      handleRemoveStream,
+    };
+  },
+});
 
-  public beforeMount() {
-    this.evaluateSourceCode();
-  }
-}
+export default StreamEditor;
