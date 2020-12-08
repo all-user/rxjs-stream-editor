@@ -51,7 +51,7 @@ export const domainStreamColorizerGettters: GetterTree<
         return state.colorDefinitionMap.get(state.colorDefinitionIds[index])
           ?.colorCode;
       } else if (
-        /^(?:#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|rgba?\((?:\s*\d{1,3}\s*,?){3,4}\s*\))$/.test(
+        /^(?:#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|rgba?\((?:\s*\d{1,3}\s*,?){3}(?:\d*\.\d+)?\s*\))$/.test(
           trimed,
         )
       ) {
