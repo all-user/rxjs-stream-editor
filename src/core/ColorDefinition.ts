@@ -8,6 +8,6 @@ export class ColorDefinition {
     if (id != null) {
       this.id = id;
     }
-    this.colorCode = colorCode ?? null;
+    this.colorCode = colorCode || null;
   }
 }

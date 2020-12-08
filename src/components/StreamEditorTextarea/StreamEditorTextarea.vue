@@ -7,9 +7,9 @@
   />
 </template>
 <script lang="ts">
-import { useStore } from '../../store';
+import { defineComponent } from 'vue';
 import { StreamDataset } from '../../core/StreamDataset';
-import { computed, defineComponent } from 'vue';
+import { useSourceCode } from '../../hooks/useSourceCode';
 
 const StreamEditorTextarea = defineComponent({
   props: {
@@ -23,22 +23,7 @@ const StreamEditorTextarea = defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
-
-    const sourceCode = computed({
-      get() {
-        return props.dataset?.sourceCode || '';
-      },
-      set(value: string) {
-        if (props.dataset == null) {
-          return;
-        }
-        store.commit('domain/streamEditor/setSourceCode', {
-          streamDatasetId: props.dataset.id,
-          sourceCode: value,
-        });
-      },
-    });
+    const { sourceCode } = useSourceCode(props.dataset);
 
     return {
       sourceCode,

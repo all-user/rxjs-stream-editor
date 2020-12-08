@@ -76,6 +76,14 @@ import { StreamEvent } from '../../core/StreamEvent';
 import { StreamDataset } from '../../core/StreamDataset';
 import StreamEditorTextarea from '../StreamEditorTextarea/StreamEditorTextarea.vue';
 import { useStore } from '../../store';
+import {
+  isNumberEvent,
+  isStringEvent,
+  isBooleanEvent,
+  isArrayEvent,
+  isNull,
+  isUndefined,
+} from '../../utils/streamEvent';
 
 const createNoCircularJsonStringifyReplacer = () => {
   const seen: unknown[] = [];
@@ -111,28 +119,18 @@ const StreamEditorItem = defineComponent({
   setup(props) {
     const store = useStore();
 
-    const events = computed(() => (props.dataset ? props.dataset.events : []));
+    const events = computed(() => props.dataset?.events || []);
 
     const getEventStyle = (
       event: StreamEvent,
     ): Partial<CSSStyleDeclaration> => {
       const backgroundColor =
         store.getters['domain/streamColorizer/colorCodeGetter'](
-          store.getters['domain/streamColorizer/colorMatcher'](event.value) ??
+          store.getters['domain/streamColorizer/colorMatcher'](event.value) ||
             '',
-        ) ?? '';
+        ) || '';
       return { backgroundColor };
     };
-
-    const isNumberEvent = (event: StreamEvent) =>
-      event.value != null && event.value.__proto__ === Number.prototype;
-    const isStringEvent = (event: StreamEvent) =>
-      event.value != null && event.value.__proto__ === String.prototype;
-    const isBooleanEvent = (event: StreamEvent) =>
-      event.value != null && event.value.__proto__ === Boolean.prototype;
-    const isArrayEvent = (event: StreamEvent) => Array.isArray(event.value);
-    const isNull = (event: StreamEvent) => event.value === null;
-    const isUndefined = (event: StreamEvent) => event.value === undefined;
 
     const handleEventAnimationEnd = (streamDataset?: StreamDataset) => {
       if (!streamDataset) return;

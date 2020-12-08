@@ -1,5 +1,5 @@
 import { ActionTree, GetterTree, MutationTree, Module } from 'vuex';
-import { defineInstanceMap, InstanceMap } from '../../../lib/InstanceMap';
+import { defineInstanceMap, InstanceMap } from '../../../utils/InstanceMap';
 import { ColorDefinition } from '../../../core/ColorDefinition';
 import { RootState } from '../internal';
 

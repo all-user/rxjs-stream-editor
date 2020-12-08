@@ -1,6 +1,6 @@
 import { StreamEvent } from '../../../core/StreamEvent';
 import { StreamDataset } from '../../../core/StreamDataset';
-import { InstanceMap, defineInstanceMap } from '../../../lib/InstanceMap';
+import { InstanceMap, defineInstanceMap } from '../../../utils/InstanceMap';
 import * as rxjs from 'rxjs';
 import * as operators from 'rxjs/operators';
 import { Module, MutationTree, GetterTree, ActionTree } from 'vuex';
