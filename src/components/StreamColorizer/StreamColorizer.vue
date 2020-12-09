@@ -202,6 +202,7 @@ export default StreamColorizer;
   line-height: 1.7em
   padding: 2px 10px
   width: 100%
+  height: 100%
   max-height: 50vh
   border: none
   outline: none
