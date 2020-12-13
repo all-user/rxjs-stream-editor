@@ -1,13 +1,14 @@
-import { Module } from 'vuex-smart-module';
+import { Module } from 'vuex';
 import {
   domainStreamEditorModule,
   domainStreamColorizerModule,
+  RootState,
 } from '../internal';
 
-export const domainModule = new Module({
+export const domainModule: Module<RootState, RootState> = {
   namespaced: true,
   modules: {
     streamEditor: domainStreamEditorModule,
     streamColorizer: domainStreamColorizerModule,
   },
-});
+};

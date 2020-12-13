@@ -4,3 +4,4 @@ export * from './domain/index';
 
 export * from './ui/bottomNav';
 export * from './ui/index';
+export * from './index';

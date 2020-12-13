@@ -1,8 +1,11 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { createStore } from 'vuex-smart-module';
-import { rootModule } from './modules';
+import { InjectionKey } from 'vue';
+import { Store, createStore, useStore as baseUseStore } from 'vuex';
+import { rootModule, RootState } from './modules/internal';
 
-Vue.use(Vuex);
+export const key: InjectionKey<Store<unknown>> = Symbol();
 
-export default createStore(rootModule);
+export const store = createStore(rootModule);
+
+export const useStore = () => {
+  return baseUseStore<RootState>(key);
+};

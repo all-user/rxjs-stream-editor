@@ -1,9 +1,9 @@
-import { Module } from 'vuex-smart-module';
-import { uiBottomNavModule } from '../internal';
+import { Module } from 'vuex';
+import { uiBottomNavModule, RootState } from '../internal';
 
-export const uiModule = new Module({
+export const uiModule: Module<RootState, RootState> = {
   namespaced: true,
   modules: {
     bottomNav: uiBottomNavModule,
   },
-});
+};

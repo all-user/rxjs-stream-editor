@@ -1,9 +1,25 @@
-import { Module } from 'vuex-smart-module';
-import { domainModule, uiModule } from './internal';
+import { Module } from 'vuex';
+import {
+  domainModule,
+  uiModule,
+  DomainStreamColorizerState,
+  DomainStreamEditorState,
+  UiBottomNavState,
+} from './internal';
 
-export const rootModule = new Module({
+export type RootState = {
+  domain: {
+    streamEditor: DomainStreamEditorState;
+    streamColorizer: DomainStreamColorizerState;
+  };
+  ui: {
+    bottomNav: UiBottomNavState;
+  };
+};
+
+export const rootModule: Module<RootState, RootState> = {
   modules: {
     domain: domainModule,
     ui: uiModule,
   },
-});
+};

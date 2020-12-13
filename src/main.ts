@@ -1,12 +1,12 @@
-import Vue from 'vue';
+import { createApp, h } from 'vue';
 import App from './App.vue';
-import store from './store';
-import VueTextareaAutosize from 'vue-textarea-autosize';
+import { store, key } from './store';
 
-Vue.use(VueTextareaAutosize);
-Vue.config.productionTip = false;
+const app = createApp({
+  render() {
+    return h(App);
+  },
+});
 
-new Vue({
-  store,
-  render: h => h(App),
-}).$mount('#app');
+app.use(store, key);
+app.mount('#app');

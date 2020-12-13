@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { StreamEvent } from './StreamEvent';
-import { InstanceMap, defineInstanceMap } from '../lib/InstanceMap';
+import { InstanceMap, defineInstanceMap } from '../utils/InstanceMap';
 
 const StreamEventInstanceMap = defineInstanceMap<StreamEvent>('id');
 
@@ -42,6 +42,8 @@ export class StreamDataset {
   }
 
   public get events() {
-    return this.eventIds.map(id => this.eventMap.get(id)!).filter(v => v);
+    return this.eventIds
+      .map(id => this.eventMap.get(id))
+      .filter((v): v is StreamEvent => !!v);
   }
 }

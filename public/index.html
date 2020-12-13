@@ -20,17 +20,17 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://all-user.github.io/rxjs-stream-editor">
     <meta property="og:image" content="https://all-user.github.io/rxjs-stream-editor/ogp.png">
-    <meta property="og:site_name" content="rxjs-stream-editor">
+    <meta property="og:site_name" content="<%= htmlWebpackPlugin.options.title %>">
     <meta property="og:description" content="RxJS stream editting intuitively">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@all__user">
     <meta name="twitter:creator" content="@all__user">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>rxjs-stream-editor</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but rxjs-stream-editor doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

@@ -1,57 +1,61 @@
-import { Actions, Mutations, Module, Getters } from 'vuex-smart-module';
+import { ActionTree, GetterTree, MutationTree, Module } from 'vuex';
+import { RootState } from '../internal';
 
 export type BottomNavContentType = 'colorizer';
 
-export class UiBottomNavState {
-  public selectedContent: BottomNavContentType = 'colorizer';
-  public enabled = false;
-}
+export const uiBottomNavState = () => {
+  const selectedContent: BottomNavContentType = 'colorizer';
+  const enabled = false;
+  return {
+    selectedContent,
+    enabled,
+  };
+};
 
-export class UiBottomNavGetters extends Getters<UiBottomNavState> {
-  public get isColorizerSelected() {
-    return this.state.selectedContent === 'colorizer';
-  }
-}
+export type UiBottomNavState = ReturnType<typeof uiBottomNavState>;
 
-export class UiBottomNavMutations extends Mutations<UiBottomNavState> {
-  public selectContent(content: BottomNavContentType) {
-    this.state.selectedContent = content;
-  }
+export const uiBottomNavGetters: GetterTree<UiBottomNavState, RootState> = {
+  isColorizerSelected(state) {
+    return state.selectedContent === 'colorizer';
+  },
+};
 
-  public setEnabled(bool: boolean) {
-    this.state.enabled = bool;
-  }
-}
+export const uiBottomNavMutations: MutationTree<UiBottomNavState> = {
+  selectContent(state, content: BottomNavContentType) {
+    state.selectedContent = content;
+  },
+  setEnabled(state, bool: boolean) {
+    state.enabled = bool;
+  },
+};
 
-export class UiBottomNavActions extends Actions<
-  UiBottomNavState,
-  never,
-  UiBottomNavMutations,
-  UiBottomNavActions
-> {
-  public selectContent(content: BottomNavContentType) {
-    this.commit('selectContent', content);
-  }
-  public selectContentOrToggleEnabled(content: BottomNavContentType) {
-    if (this.state.selectedContent !== content) {
-      this.commit('selectContent', content);
-      this.commit('setEnabled', true);
+export const uiBottomNavActions: ActionTree<UiBottomNavState, RootState> = {
+  selectContent({ commit }, content: BottomNavContentType) {
+    commit('selectContent', content);
+  },
+  selectContentOrToggleEnabled(
+    { state, commit },
+    content: BottomNavContentType,
+  ) {
+    if (state.selectedContent !== content) {
+      commit('selectContent', content);
+      commit('setEnabled', true);
       return;
     }
-    this.commit('setEnabled', !this.state.enabled);
-  }
-  public enable() {
-    this.commit('setEnabled', true);
-  }
-  public disable() {
-    this.commit('setEnabled', false);
-  }
-}
+    commit('setEnabled', !state.enabled);
+  },
+  enable({ commit }) {
+    commit('setEnabled', true);
+  },
+  disable({ commit }) {
+    commit('setEnabled', false);
+  },
+};
 
-export const uiBottomNavModule = new Module({
+export const uiBottomNavModule: Module<UiBottomNavState, RootState> = {
   namespaced: true,
-  actions: UiBottomNavActions,
-  mutations: UiBottomNavMutations,
-  state: UiBottomNavState,
-  getters: UiBottomNavGetters,
-});
+  actions: uiBottomNavActions,
+  mutations: uiBottomNavMutations,
+  state: uiBottomNavState,
+  getters: uiBottomNavGetters,
+};
